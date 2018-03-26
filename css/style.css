@@ -1,0 +1,49 @@
+#ipfav{
+background-image: url("../img/fvbf.png");
+background-size: cover;
+border: none;
+width: 32px;
+height: 32px;
+color: transparent;
+
+}
+table {
+   border: 3px solid white;
+   }
+   th, td {
+    padding: 15px;
+    text-align: center;
+	border: 3px solid black;
+
+}
+
+.tabset{
+color: white;
+display: inline-flex;
+	
+}
+
+.sttab{
+padding: 15px 15px 25px;
+}
+
+.sttab:hover{
+background-color:#06c;
+color:black;
+}
+
+#content{
+border-top:5px solid white;
+padding:15px;
+}
+
+#checkedtab{
+background-color:white;
+color:black;
+
+}
+
+.lbtab{
+cursor:pointer;
+}
+
