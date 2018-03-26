@@ -47,3 +47,53 @@ color:black;
 cursor:pointer;
 }
 
+#sortable { 
+list-style-type: none; 
+margin: 0; 
+padding: 0; 
+width: 30%;
+
+}
+#sortable li {
+background-color: #C8EBFE;  
+margin: 0 3px 3px 3px; 
+padding: 0.4em; 
+padding-left: 2.3em; 
+font-size: 1.4em; 
+height: 18px; 
+}
+#sortable li input{
+background-color: #C8EBFE;
+font-size:18px;
+margin-top: -0.2em;
+position: absolute; 
+}
+.sorticon{
+background-image: url(../img/sort.png); 
+position: absolute; 
+margin-left: -1.8em;
+margin-top: 0.2em;
+width: 32px;
+height:9px; 
+background-repeat: no-repeat;
+}
+#fmroom{
+margin-top: 20px;
+}
+.deroom{
+ left: 19em
+}
+
+#btnsaverm{
+ font-size: 20px;
+ width: 150px;
+}
+
+#rminput{
+ font-size: 20px;
+ background-color: #C8EBFE;
+}
+
+#addrmsm{
+ font-size: 20px;
+}
