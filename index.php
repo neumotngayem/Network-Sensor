@@ -302,8 +302,7 @@ if($_POST['submitfav_x'] || $_POST['submitfav_y'] ){
 }else if($_POST['submitloca']){
 	$selected_val = $_POST['locaselect'];  // Storing Selected Value In Variable
 	$selected_dvid = $_POST['dvidselect'];  
-	$sql = 'UPDATE home SET loca='.$selected_val.'WHERE device_id="'.$selected_dvid.'"';
-	echo $sql;
+	$sql = 'UPDATE home SET loca='.$selected_val.' WHERE device_id="'.$selected_dvid.'"';
 	$conn = new mysqli($servername, $username, $password, $dbname);
 	if ($conn->query($sql) === TRUE) {
 	    	echo "<meta http-equiv='refresh' content='0'>";	

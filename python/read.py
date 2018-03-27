@@ -4,6 +4,7 @@ pymysql.install_as_MySQLdb()
 import MySQLdb
 import time
 import datetime
+import re
 
 port = serial.Serial("/dev/ttyAMA0",baudrate=9600,timeout=0.2)
 db= MySQLdb.connect("localhost", "root", "admin123", "iot")
@@ -48,13 +49,17 @@ try:
                     sec1 = data[4:]
                     ts = time.time()
                     st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+                                                  
                     if typedv == "DHT11":
                         sql = "INSERT INTO home (device_id, type, temp, humi, sec) VALUES ('%s', '%s', %s, %s, '%s') ON DUPLICATE KEY UPDATE temp = %s, humi = %s, timestamp = '%s'" % (dvid,typedv,temp,humi,sec,temp,humi,str(st))
                     if typedv == "TH50K":
                         sql = "INSERT INTO home (device_id, type, water, sec) VALUES ('%s', '%s', %s, '%s') ON DUPLICATE KEY UPDATE water = %s, timestamp = '%s'" % (dvid,typedv,water,sec,water,str(st))   
-                    if("DV" in dvid):
+
+                    matchObj = re.match("DV[0-9]+$",dvid,re.I)
+                    if(matchObj):
                         cursor.execute(sql)
                         db.commit()
+                        
                 except MySQLdb.Error, e:
                     print("Error o day roi")
                 except Exception,e:
