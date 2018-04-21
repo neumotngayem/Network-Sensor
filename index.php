@@ -395,7 +395,7 @@ if($_POST['submitfav_x'] || $_POST['submitfav_y'] ){ //Submit for make device be
 	$conn->close();
 }else if($_POST['submittab']){ //Submit for changing the tab
 	$selected_id = $_POST['idselect']; 
-	$sql = 'UPDATE room SET chk_flg=0 WHERE chk_flg=1'; 
+	$sql = 'UPDATE room SET chk_flg=0'; 
 	$sql2 = 'UPDATE room SET chk_flg=1 WHERE rm_id='.$selected_id;
 	$conn = new mysqli($servername, $username, $password, $dbname);
 	if (($conn->query($sql) === TRUE) && ($conn->query($sql2) === TRUE)) {
@@ -410,9 +410,9 @@ if($_POST['submitfav_x'] || $_POST['submitfav_y'] ){ //Submit for make device be
 	}
 	$conn->close();
 }else if($_POST['submitdelerm_x'] || $_POST['submitdelerm_y']){ //Submit for delete the room
-	$selected_dvid = $_POST['dele_id'];  
-	$sql = "DELETE FROM room WHERE rm_id=".$selected_dvid;
-	$sql2 = "UPDATE home SET loca_id = 0 WHERE loca_id=".$selected_dvid;
+	$selected_deleid = $_POST['dele_id'];  
+	$sql = "DELETE FROM room WHERE rm_id=".$selected_deleid;
+	$sql2 = "UPDATE home SET loca_id = 0 WHERE loca_id=".$selected_deleid;
 	$conn = new mysqli($servername, $username, $password, $dbname);
 	if (($conn->query($sql) === TRUE) && ($conn->query($sql2) === TRUE)) {
 	    	echo "<meta http-equiv='refresh' content='0'>";	

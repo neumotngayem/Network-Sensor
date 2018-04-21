@@ -6,5 +6,5 @@ CREATE TABLE `room` (
  PRIMARY KEY (`rm_id`)
 );
 INSERT INTO `room` (`rm_id`, `rm_name`, `posi`, `chk_flg`) VALUES
-(1, 'Favorite', 1, 0),
+(1, 'Favorite', 1, 1),
 (2, 'Room manager', 2, 0)
