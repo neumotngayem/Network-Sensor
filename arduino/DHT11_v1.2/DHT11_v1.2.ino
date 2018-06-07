@@ -8,7 +8,7 @@ int ACK_FLG = 0;
 DHT dht(DHTPIN, DHTTYPE);
 
 int sec = 30000; //Default sec value
- 
+String hostnm;
 void setup() {
   //Start Serial at baudrate 9600
   Serial.begin(9600);
@@ -32,6 +32,7 @@ void loop() {
         ACK_FLG = 1;
         int indexSec = inString.indexOf("SEC");
         sec = (inString.substring((indexSec+4)).toInt())*1000;
+        hostnm = inString.substring(inString.indexOf("HOST")+5);
       }
     }
     
@@ -53,21 +54,22 @@ void loop() {
   if(ACK_FLG == 1){
       float h = dht.readHumidity();    //Read Humidity
       float t = dht.readTemperature(); //Read Temperature
-      Serial.println("ACK YES");
-      Serial.println("DEVICE DV1");
-      Serial.println("TYPE DHT11");
-      Serial.print("TEMP ");
-      Serial.println(t);               //Sent the Temparature via UART
-      Serial.print("HUMI ");
-      Serial.println(h);               //Sent the Humidity via UART
-      Serial.print("SEC ");
-      Serial.println(sec/1000);             //Sent the current variable's value via UART
-      Serial.println();                //New line
-      delay(sec);                      //Wait for sec variable's value second  
+      Serial.print("ACK YES");
+      Serial.print(" HOST ");
+      Serial.print(hostnm);
+      Serial.print(" DEVICE DV1");
+      Serial.print(" TYPE DHT11");
+      Serial.print(" TEMP ");
+      Serial.print(t);              //Sent the Temparature via UART
+      Serial.print(" HUMI ");
+      Serial.print(h);               //Sent the Humidity via UART
+      Serial.print(" SEC ");
+      Serial.print(sec/1000);       //Sent the current variable's value via UART
+      delay(sec);                    //Wait for sec variable's value second  
   }else{
-     Serial.println("ACK NO");
-     Serial.println("DEVICE DV1");
-     Serial.println("TYPE DHT11");
+     Serial.print("ACK NO");
+     Serial.print(" DEVICE DV1");
+     Serial.print(" TYPE DHT11");
      delay(5000);
   }
   
