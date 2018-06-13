@@ -16,9 +16,9 @@ if(isset($_POST['data']) && isset($_POST['data2']) )
     for($i = 0; $i < count($data); $i++){
         $sql = 'UPDATE room SET posi = '.$i.', rm_name= "'.$data[$i].'" WHERE rm_id ='.$data2[$i];
 		$conn->query($sql);
-		echo($data[$i]."-".$data2[$i]." ");
     }
-    $conn->close();		
+    $conn->close();	
+	echo('Updated');
 } else{ 
     die('lock');
 }

@@ -37,22 +37,18 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="DeviceManager">
-          <a class="nav-link" href="index.html">
+          <a class="nav-link" href="device.php">
             <i class="fa fa-fw fa-user"></i>
             <span class="nav-link-text">Device Manager</span>
           </a>
         </li>
 
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
-          <a class="nav-link" href="RoomManager.html">
+          <a class="nav-link" href="roommanager.php">
             <i class="fa fa-refresh fa-windows fa-fw"></i>
             <span class="nav-link-text">Room Manager</span>
           </a>
-        </li>
-
-     
-
-        
+        </li>   
       </ul>
        <!-- zoom -->
       <ul class="navbar-nav sidenav-toggler">
@@ -66,18 +62,11 @@
       <!-- end zoom -->
 
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <form class="form-inline my-2 my-lg-0 mr-lg-2">
-            <div class="input-group">
-              <input class="form-control" type="text" placeholder="Search">
-              <span class="input-group-append">
-                <button class="btn btn-primary" type="button">
-                  <i class="fa fa-search"></i>
-                </button>
-              </span>
-            </div>
-          </form>
-        </li>
+		<li class="nav-item">
+			<a class="nav-link">
+            <i class="fa fa-user-circle"></i> Admin</a>
+		</li>
+
         <li class="nav-item">
           <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
             <i class="fa fa-fw fa-sign-out"></i>Logout</a>
@@ -86,7 +75,12 @@
     </div>
   </nav>
 
-
+<?php
+	session_start(); 
+	if(is_null($_SESSION['user_id'])){
+		echo '<script type="text/javascript"> window.location = "./login.php"</script>';
+	}
+?>
 
   <div class="content-wrapper">
     <div class="container">
@@ -113,10 +107,12 @@
             <tr>
               <td>
                 <div class="input-group mb-3">
-                    <input  style="border-color: #0066FF; cursor:move;" class="indrag form-control rmname" type="text" id="valueid-<?php echo($i) ?>" style="margin-left:20px; margin-top: 20px" type="text" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)" value="<?php echo($row["rm_name"]) ?>" aria-describedby="basic-addon1">
-					<input id ='valuermid-<?php echo($i) ?>' class="rmid" name='rmid' type="text" value="<?php echo($row["rm_id"]) ?>" hidden/>
+                    <input required style="border-color: #0066FF; cursor:move;" class="indrag form-control rmname" type="text" id="valueid-<?php echo($i) ?>" style="margin-left:20px; margin-top: 20px" type="text" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)" value="<?php echo($row["rm_name"]) ?>" aria-describedby="basic-addon1">
+					 <form action="deleteroom.php" method="post" class="deleteRoom">
+					 <input id ='valuermid-<?php echo($i) ?>' class="rmid" name='rmid' type="text" value="<?php echo($row["rm_id"]) ?>" hidden/>
                      <div class="input-group-prepend">
-                   <button  style="border-color: black" class="btn bg-warning"><i class="fa fa-trash" id=""></i></button>
+					 <button type='submit' style="border-color: black" class="btn bg-warning"><i class="fa fa-trash" id=""></i></button>
+					</form>
                   </div>
                 </div> 
               </td>
@@ -125,7 +121,14 @@
 <?php
 			$i+=1;
 		}
-	}
+	}else{ //If no device to show
+		echo "<div class='ui-widget'>";
+	    echo "<div class='ui-state-highlight ui-corner-all' style='margin-top: 20px; padding: 0 .7em;' >";
+	    echo "<p><span class='ui-icon ui-icon-info' style='float: left; margin-right: .3em;'></span>";
+	    echo "<strong>Sorry! </strong>You don't have any room in here :(</p>";
+	    echo "</div>";
+	    echo "</div>";
+	}	
 ?>
                 
 
@@ -139,13 +142,16 @@
 	
 	<div id="server-results"><!-- For server results --></div>
    <br></br>
+   <form action="addroom.php" method="post" class="addRoom">
     <div class="input-group mb-3">
-                    <input style="border-color: #0066FF" type="text" class="form-control" placeholder="Enter name to add ..." aria-label="" aria-describedby="basic-addon1">
+					
+                    <input name ='rmadd' style="border-color: #0066FF" type="text" class="form-control" placeholder="Enter room name to add ..." aria-label="" aria-describedby="basic-addon1">
                      <div class="input-group-prepend">
-                     <button  style="border-color: black" class="btn bg-warning" type="button"><i class="fa fa-plus " id="" onclick=""></i></button>
+                     <button type='submit'  style="border-color: black" class="btn bg-warning" type="button"><i class="fa fa-plus " id="" onclick=""></i></button>
                   </div>
                 </div>
-                 </div> 
+				</form>
+    </div> 
 
   </div>
 </div>
@@ -177,13 +183,18 @@
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="login.html">Logout</a>
+            <a class="btn btn-primary" href="logout.php">Logout</a>
           </div>
         </div>
       </div>
     </div>
 
 <script>
+
+if (sessionStorage.sysRoomMess) {
+    document.getElementById("server-results").innerHTML = sessionStorage.sysRoomMess
+} 
+
 function allowDrop(ev) {
   ev.preventDefault();
 }
@@ -217,6 +228,11 @@ function drop(ev) {
 		
 		var i;
 		for (i = 0; i < rmnames.length; i++) {
+			if(rmnames[i].value.trim() == ''){
+				sessionStorage.sysRoomMess = "You need to fill your room name";
+				location.reload();
+				break;
+			}
 			data.push(rmnames[i].value);
 			data2.push(rmids[i].value);
 		}
@@ -232,10 +248,43 @@ function drop(ev) {
 		},                       
                 method: 'post',
                 success: function(res){ 
-                     $("#server-results").html(res);
+					sessionStorage.sysRoomMess = res;
+                    location.reload();
                 }
             });
 	}
+	
+	$(".deleteRoom").submit(function(event){
+	  
+    event.preventDefault(); //prevent default action 
+    var post_url = $(this).attr("action"); //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+    var form_data = $(this).serialize(); //Encode form elements for submission
+    
+    $.ajax({
+        url : post_url,
+        type: request_method,
+        data : form_data
+    }).done(function(response){
+		location.reload();
+    });
+  });
+  
+  	$(".addRoom").submit(function(event){
+    event.preventDefault(); //prevent default action 
+    var post_url = $(this).attr("action"); //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+    var form_data = $(this).serialize(); //Encode form elements for submission
+    
+    $.ajax({
+        url : post_url,
+        type: request_method,
+        data : form_data
+    }).done(function(response){
+		sessionStorage.sysRoomMess = response
+		location.reload();
+    });
+  });
 
 </script>
     <!-- Bootstrap core JavaScript-->
