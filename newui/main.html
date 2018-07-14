@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Main</title>
+  <!-- Bootstrap core CSS-->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom fonts for this template-->
+  <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <!-- Page level plugin CSS-->
+  <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+
+<body class="fixed-nav bg-dark" id="page-top">
+  <!-- Navigation-->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <a class="navbar-brand" href="index.html">Home</a>
+    
+    <!-- button responsive -->
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- end button -->
+
+
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
+          <a   class="nav-link bg-warning" href="main.html">
+            <i class="fa fa-home fa-fw"></i>
+            <span  class="nav-link-text">Home</span>
+          </a>
+        </li>
+
+
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="DeviceManager">
+          <a class="nav-link" href="DeviceManager.html">
+            <i class="fa fa-fw fa-tablet"></i>
+            <span class="nav-link-text">Device Manager</span>
+          </a>
+        </li>
+
+         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
+          <a class="nav-link" href="RoomManager.html">
+            <i class="fab fa-windows"></i>
+            <span  class="nav-link-text"> Room Manager</span>
+          </a>
+        </li>
+
+      </ul>
+
+      <!-- zoom -->
+      <ul class="navbar-nav sidenav-toggler">
+        <li class="nav-item">
+          <a class="nav-link text-center" id="sidenavToggler">
+            <i class="fa fa-fw fa-angle-left"></i>
+          </a>
+        </li>
+      </ul>
+      <!-- end zoom -->
+
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <form class="form-inline my-2 my-lg-0 mr-lg-2">
+            <div class="input-group">
+              <input class="form-control" type="text" placeholder="Search">
+              <span class="input-group-append">
+                <button class="btn btn-primary" type="button">
+                  <i class="fa fa-search"></i>
+                </button>
+              </span>
+            </div>
+          </form>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
+            <i class="fas fa-sign-out-alt"></i>Logout</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="modal" data-target="#kbi">
+            <i class="fas fa-lock"></i> Login</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Login -->
+  <div class="modal fade" id="kbi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div  class="modal-header">
+            <h4  class="modal-title" id="exampleModalLabel">Login</h4>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+          <div class="form-group">
+            <label for="exampleInputEmail1"><strong>User Name</strong></label>
+            <input class="form-control" id="exampleInputEmail1" type="email" aria-describedby="emailHelp" placeholder="Enter name">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1"><strong>Password</strong></label>
+            <input class="form-control" id="exampleInputPassword1" type="password" placeholder="Password">
+          </div>
+          <div class="form-group">
+            <div class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" type="checkbox"> Remember Password</label>
+            </div>
+          </div>
+          <a class="btn btn-primary btn-block" href="index.html">Sign In</a>
+        </form>
+        <div class="text-center">
+          <a class="d-block small mt-3" href="register.html">Register an Account</a>
+          <a class="d-block small" href="forgot-password.html">Forgot Password?</a>
+        </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+
+<!-- DV1 -->
+  <div class="content-wrapper">
+    <div class="container">
+       <div class="card mb-3">
+        <div style="text-align:center;" class="card-header">
+         <i class="fa fa-star" id="demo" style=""></i><strong> Bac's Room</strong> 
+          </div>
+        <div class="card-body bg-success">
+            <div class="table-responsive">
+            <table class="" id="dataTables" width="100%" cellspacing="1">
+              <tbody>
+                <tr>
+                  <td ><i class="fa fa-microchip" id="demo" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit; font-style: italic;" type="text" name="dvid" value ="  DV1" readonly/></td>
+
+                  <td><i class="fa fa-th" id="demo" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="dvid" value ="  DHT11" readonly/></td>
+
+                   <td><i class="fa fa-tint" id="" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="" value =" 90 %" readonly/></td>
+
+                    <td><i class="fa fa-thermometer-quarter" id="" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="" value =" 30 &#8451" readonly/></td>
+
+                     <td><i class="fa fa-clock-o" id="" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="" value ="00:00:00" readonly/></td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="card-footer text-muted ">
+       <a href="#">
+                            <div class="panel-footer" style="color: black">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+  </div>
+    </div>
+  </div>
+
+ <!-- DV2 -->
+    <div class="container">
+       <div class="card mb-3">
+        <div style="text-align:center;" class="card-header">
+         <i class="fa fa-star" id="demo" style=""></i><strong> Bac's Room</strong> 
+          </div>
+        <div class="card-body bg-primary">
+            <div class="table-responsive">
+            <table class="" id="dataTables" width="100%" cellspacing="1">
+              <tbody>
+                <tr>
+                  <td><i class="fa fa-microchip" id="demo" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="dvid" value ="  DV2" readonly/></td>
+
+                  <td><i class="fa fa-th" id="demo" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="dvid" value ="  MC52" readonly/></td>
+
+                   
+
+                    <td  ><i class="fa fa-door-open " id="" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="" value =" Open" readonly/></td>
+
+
+                     <td ><i class="fa fa-clock-o" id="" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="" value ="00:00:00" readonly/></td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="card-footer text-muted ">
+       <a href="#">
+                            <div class="panel-footer" style="color: black">
+                              <span class="pull-left">View Details</span>
+                              <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+  </div>
+    </div>
+  </div>
+
+   <!-- DV3 -->
+    <div class="container">
+       <div class="card mb-3">
+        <div style="text-align:center;" class="card-header">
+         <i class="fa fa-star" id="demo" style=""></i><strong> Bac's Room</strong> 
+          </div>
+        <div class="card-body bg-warning">
+            <div class="table-responsive">
+            <table class="" id="dataTables" width="100%" cellspacing="1">
+              <tbody>
+                <tr>
+                  <td><i class="fa fa-microchip" id="demo" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="dvid" value ="  DV3" readonly/></td>
+
+                  <td><i class="fa fa-th" id="demo" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="dvid" value ="  MQ35" readonly/></td>
+
+                  <td ><strong>CO2: <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="dvid" value ="  PPM" readonly/></strong></td>
+
+                  <td><strong>CO: <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="dvid" value ="  PPM" readonly/></strong></td>
+
+                   
+
+                    <td ><i class="fa fa-info-circle" id="" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="" value =" Okay" readonly/></td>
+
+                     <td ><i class="fa fa-clock-o" id="" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="" value ="00:00:00" readonly/></td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="card-footer text-muted ">
+       <a href="#">
+                            <div class="panel-footer" style="color: black">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+  </div>
+    </div>
+  </div>
+ 
+
+    <!-- /.container-fluid-->
+    <!-- /.content-wrapper-->
+   
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fa fa-angle-up"></i>
+    </a>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="login.html">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <style>
+      .yellow-bg {
+        color: yellow;
+      }
+    </style>
+
+    <!-- <script>
+      function doimau(giatri){
+        if(giatri == 1){
+          document.getElementById('home').style.background = "yellow";
+           document.getElementById('device').style.background = "default";
+            document.getElementById('room').style.background = "default";
+        }
+        else if(giatri == 2){
+         document.getElementById('device').style.background = "yellow";
+          document.getElementById('home').style.background = "default";
+            document.getElementById('room').style.background = "default";
+        }
+         else if(giatri == 3){
+         document.getElementById('room').style.background = "yellow";
+         document.getElementById('home').style.background = "default";
+           document.getElementById('device').style.background = "default";
+            
+      }
+    </script> -->
+
+    <script>
+    $(document).ready(function(){
+    $(".fa-star").click(function(){
+       var button = $(this);
+       button.toggleClass("yellow-bg");
+    });
+});
+    </script>
+
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Page level plugin JavaScript-->
+    <script src="vendor/chart.js/Chart.min.js"></script>
+    <script src="vendor/datatables/jquery.dataTables.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin.min.js"></script>
+    <!-- Custom scripts for this page-->
+    <script src="js/sb-admin-datatables.min.js"></script>
+    <script src="js/sb-admin-charts.min.js"></script>
+  </div>
+</body>
+
+</html>

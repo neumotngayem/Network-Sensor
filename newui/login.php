@@ -16,6 +16,7 @@
   <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
   <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 
@@ -33,19 +34,50 @@
 
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
+          <a class="nav-link" href="main.php">
+            <i class="fa fa-home fa-fw"></i>
+            <span class="nav-link-text">Home</span>
+          </a>
+        </li>
+		
+		<?php
+		$servername = "localhost";
+		$username = "root";
+		$password = "admin123";
+		$dbname = "iot";
+		// Create connection
+		$conn = new mysqli($servername, $username, $password, $dbname);
+		$sql = "SELECT rm_name, rm_id FROM room";
+		$result = $conn->query($sql);
+		if ($result->num_rows > 0) {
+			while($row = $result->fetch_assoc()) {
+		?>
+			<li class="nav-item" data-toggle="tooltip" data-placement="right" title="<?php echo($row["rm_name"]) ?>">
+				<a class="nav-link" href="roomspec.php?id=<?php echo($row["rm_id"]) ?>">
+					<i class="fas fa-tag"></i>
+					<span class="nav-link-text"> <?php echo($row["rm_name"]) ?></span>
+				</a>
+			</li>
+		<?php
+			}
+		}
+		$conn->close();
+		?>
+
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="DeviceManager">
           <a class="nav-link" href="device.php">
-            <i class="fa fa-fw fa-user"></i>
+            <i class="fa fa-fw fa-tablet"></i>
             <span class="nav-link-text">Device Manager</span>
           </a>
         </li>
 
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
-          <a class="nav-link" href="roommanager.php">
-            <i class="fa fa-refresh fa-windows fa-fw"></i>
-            <span class="nav-link-text">Room Manager</span>
+         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Room Manager">
+          <a class="nav-link" href="room.php">
+            <i class="fab fa-windows"></i>
+            <span class="nav-link-text"> Room Manager</span>
           </a>
-        </li> 
+        </li>
       </ul>
 
       <!-- zoom -->
@@ -60,13 +92,6 @@
     </div>
   </nav>
 
-<?php
-	  // remove all session variables
-	  session_unset(); 
-	  // destroy the session 
-	  session_destroy();
-?>
-
   <div class="content-wrapper">
   <div class="container">
     <div class="card card-login mx-auto mt-5">
@@ -79,7 +104,7 @@
           </div>
           <div class="form-group">
             <label for="exampleInputPassword"><strong>Password</strong></label>
-            <input name='password' class="form-control" id="exampleInputPassword" type="password" placeholder="Password">
+            <input required name='password' class="form-control" id="exampleInputPassword" type="password" placeholder="Password">
           </div>
           </div>
           <button type='submit' class="btn btn-primary btn-block" >Sign In</button>
@@ -142,7 +167,6 @@
 	}else{
 		$("#server-results").html(response);
 	}
-	
     });
   });
 </script>

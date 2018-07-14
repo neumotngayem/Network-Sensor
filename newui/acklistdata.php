@@ -1,5 +1,6 @@
+
 <table class="table" id="dataTables" width="100%" cellspacing="1">
-              <tbody>
+    <tbody>
 <?php
 	$servername = "localhost";
 	$username = "root";
@@ -11,12 +12,12 @@
 	$result = $conn->query($sql);
 	if ($result->num_rows > 0) {
 		// output data of each row
-
+		$i = 0;
 	    while($row = $result->fetch_assoc()) {
-?>
-                <tr>
-				 <form action="adddevice.php" method="post" class="addDevice"> 
-                 <td style="text-align: center;"><i class="fa fa-star star<?php echo($row["device_id"]) ?>" style="margin-top: 12px;" onclick="myFunction('star<?php echo($row["device_id"]) ?>')"></i><input class="star<?php echo($row["device_id"]) ?>" type="text" name="star" hidden value="0"/></td>
+?>	
+				
+				<tr>
+                 <td style="text-align: center;"><i class="fa fa-star star<?php echo($row["device_id"]) ?>" style="cursor: pointer; margin-top: 12px;" onclick="myFunction('star<?php echo($row["device_id"]) ?>')"></i><input class="star<?php echo($row["device_id"]) ?>" type="text" name="star" hidden value="0"/></td>
                  <td style="text-align: center;"><strong>Device ID:</strong><input class="form-control-plaintext" style="width:60px; display: inherit;" type="text" name="dvid" value ="<?php echo($row["device_id"]) ?>" readonly /></td>
                  <td style="text-align: center;"><strong>Device Name:</strong><input class="form-control-plaintext" style="width:60px; display: inherit;" type="text" name="dvtype" value ="<?php echo($row["type"]) ?>" readonly /></td>
                   <td style="text-align: center;">
@@ -35,8 +36,7 @@
 						?>				
 						</select>	
                   </td>
-                  <td style="text-align:center; "><input type="submit" class="btn bg-primary btn-block" value="Add"/></td>
-				  </form>
+                  <td style="text-align:center; "><input type='submit' onclick="addRoom('<?php echo($i) ?>')" class="btn bg-primary btn-block" value="Add"/></td>
                 </tr>
 				
 				<script>
@@ -60,15 +60,14 @@
 					});
 				</script>
 <?php
+				$i+=1;
 		}
 	}else{ //If no device to show
-		echo "<div class='ui-widget'>";
-	    echo "<div class='ui-state-highlight ui-corner-all' style='margin-top: 20px; padding: 0 .7em;' >";
-	    echo "<p><span class='ui-icon ui-icon-info' style='float: left; margin-right: .3em;'></span>";
-	    echo "<strong>Sorry! </strong>You don't have any device in here :(</p>";
-	    echo "</div>";
-	    echo "</div>";
-	}	
+?>
+	   <p><strong>Sorry! </strong>You don't have any device in here :(</p>
+<?php
+	}
+	$conn->close();
 ?>
 	<tr>
         <td></td>

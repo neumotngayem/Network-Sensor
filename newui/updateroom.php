@@ -15,12 +15,15 @@ if(isset($_POST['data']) && isset($_POST['data2']) )
     $numbers = 3;
     for($i = 0; $i < count($data); $i++){
         $sql = 'UPDATE room SET posi = '.$i.', rm_name= "'.$data[$i].'" WHERE rm_id ='.$data2[$i];
-		$conn->query($sql);
+		if ($conn->query($sql) === TRUE) {
+			continue;
+		}else{
+			die('Error');
+		}
     }
-    $conn->close();	
-	echo('Updated');
+	echo('Your room list has been saved');
 } else{ 
-    die('lock');
+    echo("Opps Error");
 }
-
+$conn->close();	
 ?>

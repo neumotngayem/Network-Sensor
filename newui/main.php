@@ -5,9 +5,10 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
   <meta name="description" content="">
   <meta name="author" content="">
-  <title>DeviceManager</title>
+  <title>Main</title>
   <!-- Bootstrap core CSS-->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <!-- Custom fonts for this template-->
@@ -17,13 +18,13 @@
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-  <script src="./js/jquery.js"></script>
-<script src="./js/jquery-ui.js"></script>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
+
 <body class="fixed-nav bg-dark" id="page-top">
   <!-- Navigation-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-    <a class="navbar-brand" href="index.html">Device Manager</a>
+    <a class="navbar-brand" href="index.html">Home</a>
     
     <!-- button responsive -->
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,11 +37,10 @@
       <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
           <a class="nav-link" href="main.php">
-            <i class="fa fa-home fa-fw"></i>
-            <span class="nav-link-text">Home</span>
+            <i style="color: white;" class="fa fa-home fa-fw"></i>
+            <span style="color: white;" class="nav-link-text">Home</span>
           </a>
         </li>
-		
 		<?php
 		$servername = "localhost";
 		$username = "root";
@@ -53,7 +53,7 @@
 		if ($result->num_rows > 0) {
 			while($row = $result->fetch_assoc()) {
 		?>
-			<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
+			<li class="nav-item" data-toggle="tooltip" data-placement="right" title="<?php echo($row["rm_name"]) ?>">
 				<a class="nav-link" href="roomspec.php?id=<?php echo($row["rm_id"]) ?>">
 					<i class="fas fa-tag"></i>
 					<span class="nav-link-text"> <?php echo($row["rm_name"]) ?></span>
@@ -64,11 +64,11 @@
 		}
 		$conn->close();
 		?>
-		
+
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="DeviceManager">
           <a class="nav-link" href="device.php">
-			<i style="color: white;" class="fa fa-fw fa-tablet"></i>
-            <span style="color: white;" class="nav-link-text">Device Manager</span>
+            <i class="fa fa-fw fa-tablet"></i>
+            <span class="nav-link-text">Device Manager</span>
           </a>
         </li>
 
@@ -91,77 +91,41 @@
       <!-- end zoom -->
 
       <ul class="navbar-nav ml-auto">
+	    <?php
+		session_start();
+		if(!is_null($_SESSION['user_id'])){
+		?>
 		<li class="nav-item">
 			<a class="nav-link">
             <i class="fa fa-user-circle"></i> Admin</a>
 		</li>
 		
-        <li class="nav-item">
+		<li class="nav-item">
           <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
             <i class="fa fa-fw fa-sign-out-alt"></i>Logout</a>
         </li>
+		<?php
+		}else{
+		?>
+		<li class="nav-item">
+          <a class="nav-link" data-toggle="modal" data-target="#kbi">
+            <i class="fas fa-sign-in-alt"></i> Login</a>
+        </li>
+		<?php
+		}
+		?>
+
       </ul>
     </div>
   </nav>
 
-<?php
-	session_start(); 
-	if(is_null($_SESSION['user_id'])){
-		echo '<script type="text/javascript"> window.location = "./login.php"</script>';
-	}
-?>
+	<div class="content-wrapper">
+		<div class="container">
+				<div id="show"></div>	
+		</div>
+	</div>	
+ 
 
-  <div class="content-wrapper">
-    <div class="container">
-	
-	
-		<div class="form-inline">
-		<div class="form-group">
-		<select class="form-control" id="">
-			<option selected>SSID</option>
-			<option value="1">One</option>
-			<option value="2">Two</option>
-			<option value="3">Three</option>
-		</select>
-		</div>
-		<div class="form-group">
-		<input placeholder="Password" type="text" class="form-control"></input>
-		</div>
-			<div class="btn-group ">
-				<button class="btn btn-success" style="color: black" ><i class="fa fa-wifi" > Conect</i></button>
-				<button class="btn bg-danger" ><strong>Status: </strong><i> Disconected</i></button>
-			</div> 		
-		</div>
-	
-
-		<p>
-			<div class="btn-group" id='devicestatus'></div>
-		</p>
-		
-		<p>
-			<div class="btn-group ">
-				<button class="btn bg-warning" ><i class="fas fa-mobile-alt" > Change</i></button>
-				<span class="btn btn-success" style="cursor: default; color: black" ><strong>Registered : </strong><i> 01248077279</i></span>
-			</div>
-		</p>	
-	
-	<button style="margin-bottom: 15px;" class="btn bg-warning" ><i class="fa fa-key"> Change Admin's Password</i></button>
-	</br>
-	
-	<!-- <a class="btn btn-primary" href="turnonoff.php?state=on">Turn on device</a> -->
-      <!-- Example DataTables Card-->
-    <div class="card mb-3">
-        <div class="card-header"><b>WX-Net nodes</b></div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <div id="show"></div>
-          </div>
-        </div>
-         <div class=" card-footer small text-muted"></div>
-		 
-		<div id="server-results"></div>	
-    </div>
-  </div>
     <!-- /.container-fluid-->
     <!-- /.content-wrapper-->
    
@@ -187,82 +151,93 @@
         </div>
       </div>
     </div>
-
-<script>
-  
-  if (sessionStorage.sysDeviceMess) {
-    document.getElementById("server-results").innerHTML = sessionStorage.sysDeviceMess
-  } 
- 
-  
-  function myFunction(starid){
-
-	var check = document.getElementsByClassName(starid)[1].value;
-    if(check == 0){
-      document.getElementsByClassName(starid)[0].style.color = "#ffcc00";
-	  document.getElementsByClassName(starid)[1].setAttribute('value','1');
-	  sessionStorage.setItem(starid,'1');
-    } else {
-      document.getElementsByClassName(starid)[0].style.color = "black";
-	  document.getElementsByClassName(starid)[1].setAttribute('value','0');
-	  sessionStorage.setItem(starid,'0');
-    }
 	
-  };
+	<!-- Login Modal -->
+	<div class="modal fade" id="kbi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div  class="modal-header">
+            <h4  class="modal-title" id="exampleModalLabel" style="text-align:center;"><i class="fa fa-lock"></i><strong> Login</strong></h4>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+         <div class="modal-body">
+         <form action="signin.php" method="post" class='signin'>
+          <div class="form-group">
+            <label for="exampleInputEmail1"><strong>User Name</strong></label>
+            <input required name='username' class="form-control"  id="exampleInputEmail1" type="text" aria-describedby="emailHelp" placeholder="Username">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1"><strong>Password</strong></label>
+            <input required name='password' class="form-control" id="exampleInputPassword1" type="password" placeholder="Password">
+          </div>
+          <button type='submit' class="btn btn-primary btn-block" >Sign In</button>
+        </form>
+		<br>
+        <div class="text-center">
+          <a class="d-block small" href="forgot-password.html">Forgot Password?</a>
+        </div>
+		<br>
+		<div id="login-results"><!-- For server results --></div>
+        </div>
+          
+        </div>
+      </div>
+    </div>
 
-  function addRoom(rownum){
-	var star = document.getElementsByName("star")[rownum].defaultValue;
-	var dvid = document.getElementsByName("dvid")[rownum].defaultValue;
-	var dvtype = document.getElementsByName("dvtype")[rownum].defaultValue;
-	var room = document.getElementById("dropdown"+dvid).value;
-	if(room == ''){
-		alert('You have to select a Room first, If not have go to Room Manager and add your room');
-		return;
-	}
-	$.ajax({
-        url: 'adddevice.php', 
+
+    <script>
+	  
+	function editFav(dvid){
+		$.ajax({
+        url: 'editfav.php', 
         dataType: 'text',
         cache: false,
         data: {
-		star:  star,
-		dvid:  dvid,
-		dvtype: dvtype,
-		room: room,
+			fav: '1',
+			dvid:  dvid,
 		},                       
         method: 'post',
         success: function(res){ 
-			sessionStorage.sysDeviceMess = res;
+			sessionStorage.sysMainMess = res;
 			location.reload();
         }
+		});
+		  
+	}
+	  
+	  $('#show').load('homelistdata.php');
+	  
+	$(document).ready(function() {
+		setInterval(function () {
+			$('#show').load('homelistdata.php')
+		}, 5000);
+	});
+	
+	  $(".signin").submit(function(event){
+	  
+    event.preventDefault(); //prevent default action 
+    var post_url = $(this).attr("action"); //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+    var form_data = $(this).serialize(); //Encode form elements for submission
+    
+    $.ajax({
+        url : post_url,
+        type: request_method,
+        data : form_data
+    }).done(function(response){ //
+	
+	if(response === 'login'){
+		location.reload();
+	}else{
+		$("#login-results").html(response);
+	}
     });
-  };
-  
-  function turnonoff(state){
-	$.ajax({
-        url: 'turnonoff.php', 
-        dataType: 'text',
-        cache: false,
-        data: {
-		state:  state,
-		},                       
-        method: 'get',
-        success: function(res){
-			location.reload();
-        }
-    });  
-  };
-  
-  $('#show').load('acklistdata.php');
-  $('#devicestatus').load('devicestatus.php');
-  
-  $(document).ready(function() {
-	setInterval(function () {
-		$('#show').load('acklistdata.php');
-		$('#devicestatus').load('devicestatus.php')
-	}, 5000);
   });
 
-</script>
+    </script>
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>

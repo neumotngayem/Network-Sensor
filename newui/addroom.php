@@ -19,17 +19,12 @@ if(isset($_POST['rmadd'])){
 	}
 	$sql2 = 'INSERT INTO room (rm_name, posi) VALUES ("'.$rm_name.'", '.$maxposi.')';
 	if ($conn->query($sql2) === TRUE) {
-	 	echo "Added";	
+	 	echo $rm_name." Added";	
 	} else {
-	    	echo "<div class='ui-widget'>";
-		echo "<div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'>";
-		echo "<p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span>";
-		echo "<strong>Alert: </strong>Something went wrong with your device</p>";
-		echo "</div>";
-		echo "</div>";
+		echo("Opps Error");
 	}
-	$conn->close();
 }else{
-	echo "Close";
+	echo("Opps Error");
 }
+$conn->close();	
 ?>
