@@ -5,9 +5,10 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
   <meta name="description" content="">
   <meta name="author" content="">
-  <title>DeviceManager</title>
+  <title>Main</title>
   <!-- Bootstrap core CSS-->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <!-- Custom fonts for this template-->
@@ -16,13 +17,14 @@
   <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
-  <script src="./js/jquery.js"></script>
-<script src="./js/jquery-ui.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
+
 <body class="fixed-nav bg-dark" id="page-top">
   <!-- Navigation-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-    <a class="navbar-brand" href="index.html">Device Manager</a>
+    <a class="navbar-brand" href="index.html">Home</a>
     
     <!-- button responsive -->
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,53 +35,47 @@
 
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
+          <a class="nav-link" href="index.php">
+            <i style="color: white;" class="fa fa-home fa-fw"></i>
+            <span style="color: white;" class="nav-link-text">Home</span>
+          </a>
+        </li>
+		<?php
+		$servername = "localhost";
+		$username = "root";
+		$password = "admin123";
+		$dbname = "iot";
+		// Create connection
+		$conn = new mysqli($servername, $username, $password, $dbname);
+		$sql = "SELECT rm_name, rm_id FROM room ORDER BY posi";
+		$result = $conn->query($sql);
+		if ($result->num_rows > 0) {
+			while($row = $result->fetch_assoc()) {
+		?>
+			<li class="nav-item" data-toggle="tooltip" data-placement="right" title="<?php echo($row["rm_name"]) ?>">
+				<a class="nav-link" href="roomspec.php?id=<?php echo($row["rm_id"]) ?>">
+					<i class="fas fa-tag"></i>
+					<span class="nav-link-text"> <?php echo($row["rm_name"]) ?></span>
+				</a>
+			</li>
+		<?php
+			}
+		}
+		$conn->close();
+		?>
+
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="DeviceManager">
-          <a class="nav-link" href="">
-            <i class="fa fa-fw fa-dashboard"></i>
+          <a class="nav-link" href="device.php">
+            <i class="fa fa-fw fa-tablet"></i>
             <span class="nav-link-text">Device Manager</span>
           </a>
         </li>
 
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
-          <a class="nav-link" href="">
-            <i class="fa fa-refresh fa-spin fa-fw"></i>
-            <span class="nav-link-text">Charts</span>
-          </a>
-        </li>
-
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
-          <a class="nav-link" href="">
-            <i class="fa fa-fw fa-table"></i>
-            <span class="nav-link-text">Tables</span>
-          </a>
-        </li>
-
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
-          <a class="nav-link" href="">
-            <i class="fa fa-fw fa-wrench"></i>
-            <span class="nav-link-text">Components</span>
-          </a>
-        </li>
-
-      
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages">
-          <a class="nav-link" href="" >
-            <i class="fa fa-fw fa-file"></i>
-            <span class="nav-link-text">Example Pages</span>
-          </a>
-        </li>
-
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
-          <a class="nav-link" href="">
-            <i class="fa fa-fw fa-sitemap"></i>
-            <span class="nav-link-text">Menu Levels</span>
-          </a>
-        </li>
-
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Link">
-          <a class="nav-link" href="">
-            <i class="fa fa-fw fa-link"></i>
-            <span class="nav-link-text">Link</span>
+         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
+          <a class="nav-link" href="room.php">
+            <i class="fab fa-windows"></i>
+            <span class="nav-link-text"> Room Manager</span>
           </a>
         </li>
       </ul>
@@ -95,44 +91,41 @@
       <!-- end zoom -->
 
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <form class="form-inline my-2 my-lg-0 mr-lg-2">
-            <div class="input-group">
-              <input class="form-control" type="text" placeholder="Search">
-              <span class="input-group-append">
-                <button class="btn btn-primary" type="button">
-                  <i class="fa fa-search"></i>
-                </button>
-              </span>
-            </div>
-          </form>
-        </li>
-        <li class="nav-item">
+	    <?php
+		session_start();
+		if(!is_null($_SESSION['user_id'])){
+		?>
+		<li class="nav-item">
+			<a class="nav-link">
+            <i class="fa fa-user-circle"></i> Admin</a>
+		</li>
+		
+		<li class="nav-item">
           <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
-            <i class="fa fa-fw fa-sign-out"></i>Logout</a>
+            <i class="fa fa-fw fa-sign-out-alt"></i>Logout</a>
         </li>
+		<?php
+		}else{
+		?>
+		<li class="nav-item">
+          <a class="nav-link" data-toggle="modal" data-target="#kbi">
+            <i class="fas fa-sign-in-alt"></i> Login</a>
+        </li>
+		<?php
+		}
+		?>
+
       </ul>
     </div>
   </nav>
 
+	<div class="content-wrapper">
+		<div class="container">
+				<div id="show"></div>	
+		</div>
+	</div>	
+ 
 
-
-  <div class="content-wrapper">
-    <div class="container">
-     
-      <!-- Example DataTables Card-->
-       <div class="card mb-3">
-        <div class="card-header">
-          </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <div id="show"></div>
-          </div>
-        </div>
-         <div class=" card-footer small text-muted"></div>
-		<div id="server-results"></div>
-    </div>
-  </div>
     <!-- /.container-fluid-->
     <!-- /.content-wrapper-->
    
@@ -153,34 +146,135 @@
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="login.html">Logout</a>
+            <button class="btn btn-primary" onclick="logout()">Logout</button>
           </div>
         </div>
       </div>
     </div>
-
-<script>
-  
-  if (sessionStorage.sysMess) {
-    document.getElementById("server-results").innerHTML = sessionStorage.sysMess
-  } 
-  
-  function myFunction(starid){
-
-	var check = document.getElementsByClassName(starid)[1].value;
-    if(check == 0){
-      document.getElementsByClassName(starid)[0].style.color = "#ffcc00";
-	  document.getElementsByClassName(starid)[1].setAttribute('value','1');
-	  sessionStorage.setItem(starid,'1');
-    } else {
-      document.getElementsByClassName(starid)[0].style.color = "black";
-	  document.getElementsByClassName(starid)[1].setAttribute('value','0');
-	  sessionStorage.setItem(starid,'0');
-    }
 	
-  }
+	<!-- Login Modal -->
+	<div class="modal fade" id="kbi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div  class="modal-header">
+            <h4  class="modal-title" id="exampleModalLabel" style="text-align:center;"><i class="fa fa-lock"></i><strong> Login</strong></h4>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+         <div class="modal-body">
+         <form action="signin.php" method="post" class='signin'>
+          <div class="form-group">
+            <label for="exampleInputEmail1"><strong>User Name</strong></label>
+            <input required name='username' class="form-control"  id="exampleInputEmail1" type="text" aria-describedby="emailHelp" placeholder="Username">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1"><strong>Password</strong></label>
+            <input required name='password' class="form-control" id="exampleInputPassword1" type="password" placeholder="Password">
+          </div>
+          <button type='submit' class="btn btn-primary btn-block" >Sign In</button>
+        </form>
+		<br>
+        <div class="text-center">
+          <a class="d-block small" href="forgot-password.html">Forgot Password?</a>
+        </div>
+		<br>
+		<div id="login-results"><!-- For server results --></div>
+        </div>
+          
+        </div>
+      </div>
+    </div>
+	
+	<!-- Device Name Modal -->
+	<div class="modal fade" id="kbi1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div  class="modal-header">
+            <h4  class="modal-title" id="exampleModalLabel">Change Device Name</h4>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+          <div class="form-group">
+            <input class="form-control" name="dvname" placeholder="Enter name">
+          </div>     
+          <button class="btn btn-primary btn-block" onclick="editDvName()">Save</button>
+        </form>
+          </div>      
+        </div>
+      </div>
+    </div>
 
-  $(".addDevice").submit(function(event){
+
+    <script>
+	function setRow(rownum){
+	sessionStorage.setItem("row",rownum);
+	}
+	
+	function editFav(dvid){
+		$.ajax({
+        url: 'editfav.php', 
+        dataType: 'text',
+        cache: false,
+        data: {
+			fav: '1',
+			dvid:  dvid,
+		},                       
+        method: 'post',
+        success: function(res){ 
+			sessionStorage.sysMainMess = res;
+			location.reload();
+        }
+		});  
+	}
+	function editDvName(){
+		var rownum = sessionStorage.row;
+		var dvid = document.getElementsByName("dvid")[rownum].defaultValue;
+		var dvname = $('[name=dvname]').val();
+		if(dvname == ''){
+			alert('You have to enter your Device name');
+			return;
+		}
+		$.ajax({
+			url: 'editname.php', 
+			dataType: 'text',
+			cache: false,
+			data: {
+			dvid:  dvid,
+			dvname: dvname,
+			},                       
+			method: 'post',
+			success: function(res){ 
+				location.reload();
+			}
+		});
+	}
+	function logout(){
+		$.ajax({
+        url: 'logout.php', 
+        dataType: 'text',
+        cache: false,
+        data: {
+		},                       
+        method: 'post',
+        success: function(res){ 
+			location.reload();
+        }
+		});
+	}
+	  
+	  $('#show').load('homelistdata.php');
+	  
+	$(document).ready(function() {
+		setInterval(function () {
+			$('#show').load('homelistdata.php')
+		}, 5000);
+	});
+	
+	$(".signin").submit(function(event){
 	  
     event.preventDefault(); //prevent default action 
     var post_url = $(this).attr("action"); //get form action url
@@ -192,21 +286,17 @@
         type: request_method,
         data : form_data
     }).done(function(response){ //
-        sessionStorage.sysMess = response;
+	
+	if(response === 'login'){
 		location.reload();
+	}else{
+		$("#login-results").html(response);
+	}
     });
   });
-  
-  $('#show').load('acklistdata.php')
-  
-  $(document).ready(function() {
-	setInterval(function () {
-		$('#show').load('acklistdata.php')
-	}, 5000);
-  });
 
+    </script>
 
-</script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>

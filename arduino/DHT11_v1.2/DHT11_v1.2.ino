@@ -21,7 +21,7 @@ void loop() {
   if(Serial.available() > 0){
     String inString = Serial.readString();
     
-    if(inString.indexOf("ACK") != -1){
+    if(inString.indexOf("ACKYES") != -1){
       //Get the index of str 'ACK' from incoming str
       int indexAck = inString.indexOf("ACK");
       //Data receive will be like DV1 ACK SEC 30
@@ -34,6 +34,17 @@ void loop() {
         sec = (inString.substring((indexSec+4)).toInt())*1000;
         hostnm = inString.substring(inString.indexOf("HOST")+5);
       }
+    }
+
+    if(inString.indexOf("ACKNO") != -1){
+      //Get the index of str 'ACK' from incoming str
+      int indexAck = inString.indexOf("ACKYES");
+      //Data receive will be like DV1 ACK SEC 30
+      //From indexSec we extract the device ID 
+      String dvid = inString.substring(0,(indexAck -1));
+      if(dvid.equals("DV1")){
+        ACK_FLG = 0;
+      }   
     }
     
      //If it contain 'SEC' inside

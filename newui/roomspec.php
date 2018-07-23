@@ -47,13 +47,13 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
-          <a class="nav-link" href="main.php">
+          <a class="nav-link" href="index.php">
             <i class="fa fa-home fa-fw"></i>
             <span class="nav-link-text">Home</span>
           </a>
         </li>
 		<?php
-		$sql = "SELECT rm_name, rm_id FROM room";
+		$sql = "SELECT rm_name, rm_id FROM room ORDER BY posi";
 		$result = $conn->query($sql);
 		if ($result->num_rows > 0) {
 			while($row = $result->fetch_assoc()) {
@@ -161,7 +161,7 @@
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="logout.php">Logout</a>
+            <button class="btn btn-primary" onclick="logout()">Logout</button>
           </div>
         </div>
       </div>
@@ -200,9 +200,34 @@
         </div>
       </div>
     </div>
+	
+	<!-- Device Name Modal -->
+	<div class="modal fade" id="kbi1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div  class="modal-header">
+            <h4  class="modal-title" id="exampleModalLabel">Change Device Name</h4>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+          <div class="form-group">
+            <input class="form-control" name="dvname" placeholder="Enter name">
+          </div>     
+         <button class="btn btn-primary btn-block" onclick="editDvName()">Save</button>
+        </form>
+          </div>      
+        </div>
+      </div>
+    </div>
 
 
     <script>
+	function setRow(rownum){
+	sessionStorage.setItem("row",rownum);
+	}
 	  
 	function editFav(dvid, fav){
 		$.ajax({
@@ -219,7 +244,43 @@
 			location.reload();
         }
 		});
-		  
+	}
+	
+	function editDvName(){
+		var rownum = sessionStorage.row;
+		var dvid = document.getElementsByName("dvid")[rownum].defaultValue;
+		var dvname = $('[name=dvname]').val();
+		if(dvname == ''){
+			alert('You have to enter your Device name');
+			return;
+		}
+		$.ajax({
+			url: 'editname.php', 
+			dataType: 'text',
+			cache: false,
+			data: {
+			dvid:  dvid,
+			dvname: dvname,
+			},                       
+			method: 'post',
+			success: function(res){ 
+				location.reload();
+			}
+		});
+	}
+	
+	function logout(){
+		$.ajax({
+        url: 'logout.php', 
+        dataType: 'text',
+        cache: false,
+        data: {
+		},                       
+        method: 'post',
+        success: function(res){ 
+			location.reload();
+        }
+		});
 	}
 	
 	$('#show').load('roomlistdata.php?id=<?php echo($rm_id) ?>');

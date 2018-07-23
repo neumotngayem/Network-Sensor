@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <title>DetailMC52</title>
+  <title>RoomManager</title>
   <!-- Bootstrap core CSS-->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <!-- Custom fonts for this template-->
@@ -17,23 +16,15 @@
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
   <style type="text/css">
-        .example{
-            margin: 20px;
-        }
- 
-    </style>
+    .indrag:hover{background-color: #ffcc00;}
+  </style>
 </head>
-
-
 
 <body class="fixed-nav bg-dark" id="page-top">
   <!-- Navigation-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-    <a class="navbar-brand" href="index.html">Detail</a>
+    <a class="navbar-brand" href="index.html">Room Manager</a>
     
     <!-- button responsive -->
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,22 +43,24 @@
         </li>
 
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="DeviceManager">
-          <a  class="nav-link " href="DeviceManager.html">
+          <a class="nav-link" href="DeviceManager.html">
             <i class="fa fa-fw fa-tablet"></i>
             <span class="nav-link-text">Device Manager</span>
           </a>
         </li>
 
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
-          <a class="nav-link" href="RoomManager.html">
+         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
+          <a  class="nav-link bg-warning" href="RoomManager.html">
             <i class="fab fa-windows"></i>
             <span class="nav-link-text"> Room Manager</span>
           </a>
         </li>
 
-      </ul>
+     
 
-      <!-- zoom -->
+        
+      </ul>
+       <!-- zoom -->
       <ul class="navbar-nav sidenav-toggler">
         <li class="nav-item">
           <a class="nav-link text-center" id="sidenavToggler">
@@ -75,6 +68,7 @@
           </a>
         </li>
       </ul>
+      <!-- end zoom -->
       <!-- end zoom -->
 
       <ul class="navbar-nav ml-auto">
@@ -98,13 +92,12 @@
     </div>
   </nav>
 
-
-<!-- change name -->
-<div class="modal fade" id="kbi2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- delete button -->
+<div class="modal fade" id="kbidelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div  class="modal-header">
-            <h4  class="modal-title" id="exampleModalLabel">Change Device Name</h4>
+            <h3  class="modal-title" id="exampleModalLabel">When delete where all of your device will come ?</h3>
             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
@@ -113,11 +106,16 @@
             <form>
           <div class="form-group">
    
-            <input class="form-control" placeholder="Enter name">
+            <select  class="form-control" id="" >
+                        <option selected></option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Threee</option>
+                      </select>
           </div>
        
       
-          <a class="btn btn-primary btn-block" href="">Save</a>
+          <a class="btn btn-primary btn-block" href="">Delete</a>
         </form>
         
           </div>
@@ -125,114 +123,100 @@
         </div>
       </div>
     </div>
-
+    <!-- end delete -->
 
   <div class="content-wrapper">
     <div class="container">
-      
-      
-
-
-
-  
-      <!-- Example DataTables Card-->
        <div class="card mb-3">
-        <div class="card-header" style="text-align: center;">
-          <i class="fa fa-star" id="demo" ></i> <strong class="" data-toggle="modal" data-target="#kbi2">Device Name</strong>
-          </div>
-
-      
-      
-
-
-
-  
         <div class="card-body">
           <div class="table-responsive">
-            <table class="table" id="dataTables" width="100%" cellspacing="1">
-              <tbody>
-                <tr>
-                  <td style="text-align:center; "><strong>Device ID: <input class="form-control-plaintext" style="width:60px; display: inherit; font-style: italic;" type="text" name="dvid" value ="DV2" readonly/></strong></td>
-                  
-                
-                <td></td>
-                 <td  style="text-align:center; "><strong>Device Type: <input class="form-control-plaintext" style="width:60px; display: inherit; font-style: italic;" type="text" value ="MC52" readonly/></strong></td>
-           
-                </tr>
-                <tr>
-                 
-              
-                   <td style="text-align: center;" colspan="3"  ><i class="fa fa-door-open " id="" style="font-size: 25px;"></i><strong> Status:</strong> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="" value =" Open" readonly/></td>
-                   
-                </tr>
-                
-
-                <tr>
-                   <td style="text-align:center; "><strong>Room<input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly/></strong></td>
-                  <td>
-                      <select  class="form-control" id="" >
-                        <option selected></option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Threee</option>
-                      </select>
-                  </td>
-
-                    <td >
-                       <button class="btn btn-block bg-default "><strong>Change </strong></button>
-                    </td>
-                    
-                </tr>
-               
-                <tr>
-                  <td><button class="btn btn-block bg-default "><strong>Export data in </strong></button></td>  
-                  <td>
-                      <select  class="form-control" id="" >
-                        <option selected></option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Threee</option>
-                      </select>
-                  </td>
-                  <td></td>
-                
-                </tr>
-                <tr>
-                  <td style="text-align:center; "><strong>Warning<input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly/></strong></td>
-                  <td style="text-align: center;">
-
-                    <input type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger"> <strong> </strong></td>
-                   
-                  <td style="text-align: center;">
-                    <strong>Until<input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly/></strong>
-                    <select class="bg-success btn">
-                        <option  selected></option>
-                        <option value="1">Onetttttttttttt</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
-                  </td>
-                  
-                </tr>
-                
-              </tbody>
-            </table>
-
+            <table id="myTable2" class="table tablesorter"  width="100%" cellspacing="1">
+         
             
-          </div>
 
-        </div>
-         <div class=" card-footer small text-muted"><button class="btn btn-block bg-warning "><strong>Delete Device </strong></button></div>
 
-    </div>
-       <!--  <p class="btn-danger" style="text-align: center;"><strong>Error !!!</strong></p>
+            <tr>
+              <td>
+                <div class="input-group mb-3">
+               
 
-         <p class="btn-success" style="text-align: center;"><strong>Successful !!!</strong></p> -->
+                    <input  style="border-color: #0066FF; cursor:move;" class="indrag form-control" type="text" id="value-1" style="margin-left:20px; margin-top: 20px" type="text" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)" placeholder="Enter name ..." aria-describedby="basic-addon1">
+
+                     <div class="input-group-prepend">
+                   <button  style="border-color: black" class="btn bg-warning" data-toggle="modal" data-target="#kbidelete"><i class="fa fa-trash" id=""></i></button>
+                  </div>
+                </div> 
+              </td>
+            </tr>
+
+
+               <tr>
+              <td>
+                
+                 <div class="input-group mb-3">
+                     <input style="border-color: #0066FF; cursor:move;" class="indrag form-control" type="text" id="value-2" style="margin-left:20px; margin-top: 20px" type="text" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)" placeholder="Enter name ..." aria-describedby="basic-addon1">
+                    
+                     <div class="input-group-prepend">
+                   <button  style="border-color: black" class="btn bg-warning" data-toggle="modal" data-target="#kbidelete"><i class="fa fa-trash" ></i></button>
+                  </div>
+                </div> 
+              </td>
+            </tr>
+
+
+              <tr>
+              <td>
+               
+                <div class="input-group mb-3">
+                     <input style="border-color: #0066FF; cursor:move;" class="indrag form-control" type="text" id="value-3" style="margin-left:20px; margin-top: 20px" type="text" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)" placeholder="Enter name ..." aria-describedby="basic-addon1">
+                    
+                     <div class="input-group-prepend">
+                   <button  style="border-color: black" class="btn bg-warning" data-toggle="modal" data-target="#kbidelete"><i class="fa fa-trash" id=""></i></button>
+                  </div>
+                </div> 
+              </td>
+            </tr>
+
+
+              <tr>
+              <td>
+                <div class="input-group mb-3">
+                     <input style="border-color: #0066FF; cursor:move;" class="indrag form-control" type="text" id="value-4" style="margin-left:20px; margin-top: 20px" type="text" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)" placeholder="Enter name ..." aria-describedby="basic-addon1">
+                    
+                     <div class="input-group-prepend">
+                   <button  style="border-color: black" class="btn bg-warning" type="button" data-toggle="modal" data-target="#kbidelete"><i class="fa fa-trash" ></i></button>
+                  </div>
+                </div> 
+              </td>
+            </tr>
+
+          
+        </table>
+      </div>
   </div>
+  <div class=" card-footer small text-muted"><button type="button" class="btn btn-success btn-lg btn-block">Click to Save</button></div>
+    </div>
+   <br></br>
+    <div class="input-group mb-3">
+                    <input style="border-color: #0066FF" type="text" class="form-control" placeholder="Enter name to add ..." aria-label="" aria-describedby="basic-addon1">
+                     <div class="input-group-prepend">
+                     <button  style="border-color: black" class="btn bg-warning" type="button"><i class="fa fa-plus " id="" onclick=""></i></button>
+                  </div>
+                </div>
+                 </div> 
 
-  
-    <!-- /.container-fluid-->
+  </div>
+</div>
+   <!-- /.container-fluid-->
     <!-- /.content-wrapper-->
+
+ 
+   
+
+    
+     
+ 
+  
    
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
@@ -256,26 +240,26 @@
         </div>
       </div>
     </div>
-    
 
-    <style>
-      .yellow-bg {
-        color: yellow;
-      }
-    
-    </style>
+<script>
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+ 
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+ 
+function drop(ev) {
+  ev.preventDefault();
+  var idData = ev.dataTransfer.getData("text");
+  var data = document.getElementById(idData).value;
+  var dataBack = ev.target.value;
+  document.getElementById(idData).value = dataBack;
+  document.getElementById(ev.target.id).value = data
+}
 
-   
-    <script>
-    $(document).ready(function(){
-    $(".fa-star").click(function(){
-       var button = $(this);
-       button.toggleClass("yellow-bg");
-    });
-});
-    </script>
-
-
+</script>
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -294,3 +278,43 @@
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

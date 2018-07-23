@@ -38,7 +38,7 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
 		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
-          <a class="nav-link" href="main.php">
+          <a class="nav-link" href="index.php">
             <i class="fa fa-home fa-fw"></i>
             <span class="nav-link-text">Home</span>
           </a>
@@ -51,7 +51,7 @@
 		$dbname = "iot";
 		// Create connection
 		$conn = new mysqli($servername, $username, $password, $dbname);
-		$sql = "SELECT rm_name, rm_id FROM room";
+		$sql = "SELECT rm_name, rm_id FROM room ORDER BY posi";
 		$result = $conn->query($sql);
 		if ($result->num_rows > 0) {
 			while($row = $result->fetch_assoc()) {

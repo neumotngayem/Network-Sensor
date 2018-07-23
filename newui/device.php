@@ -35,7 +35,7 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
-          <a class="nav-link" href="main.php">
+          <a class="nav-link" href="index.php">
             <i class="fa fa-home fa-fw"></i>
             <span class="nav-link-text">Home</span>
           </a>
@@ -48,7 +48,7 @@
 		$dbname = "iot";
 		// Create connection
 		$conn = new mysqli($servername, $username, $password, $dbname);
-		$sql = "SELECT rm_name, rm_id FROM room";
+		$sql = "SELECT rm_name, rm_id FROM room ORDER BY posi";
 		$result = $conn->query($sql);
 		if ($result->num_rows > 0) {
 			while($row = $result->fetch_assoc()) {
@@ -62,7 +62,6 @@
 		<?php
 			}
 		}
-		$conn->close();
 		?>
 		
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="DeviceManager">
@@ -132,11 +131,6 @@
 				<button class="btn bg-danger" ><strong>Status: </strong><i> Disconected</i></button>
 			</div> 		
 		</div>
-	
-
-		<p>
-			<div class="btn-group" id='devicestatus'></div>
-		</p>
 		
 		<p>
 			<div class="btn-group ">
@@ -187,8 +181,50 @@
         </div>
       </div>
     </div>
+	<!-- Add Modal -->
+	<div class="modal fade" id="kbiadd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">     
+          <div class="modal-body">
+            <form>
+          <div class="form-group">
+            <h5>What is your device name ?</h5>
+            <input class="form-control" type="text" name="dvname">
+            <br>
+            <h5>What room is belong to ?</h5>
+			<select required name="room" class="bg-warning btn">
+				<?php
+					$sqlRm = "SELECT rm_id, rm_name FROM room ORDER BY posi";
+					$resultRm = $conn->query($sqlRm);
+					if ($resultRm->num_rows > 0) {
+						while($rowRm = $resultRm->fetch_assoc()) {
+							?>
+							<option value="<?php echo($rowRm["rm_id"]) ?>"><?php echo($rowRm["rm_name"]) ?></option>
+							<?php
+						}
+					}else{
+						?>
+						<option value="">You have to add a room first</option>
+						<?php
+					}
+					$conn->close();
+				?>				
+			</select>	
+          </div>
+          <button class="btn btn-primary btn-block" onclick="addRoom()">Add</button>
+        </form>
+        
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <!-- end add -->
 
 <script>
+  function setRow(rownum){
+	sessionStorage.setItem("row",rownum);
+  }
   
   if (sessionStorage.sysDeviceMess) {
     document.getElementById("server-results").innerHTML = sessionStorage.sysDeviceMess
@@ -210,11 +246,18 @@
 	
   };
 
-  function addRoom(rownum){
+  function addRoom(){
+	var rownum = sessionStorage.row;
 	var star = document.getElementsByName("star")[rownum].defaultValue;
 	var dvid = document.getElementsByName("dvid")[rownum].defaultValue;
 	var dvtype = document.getElementsByName("dvtype")[rownum].defaultValue;
-	var room = document.getElementById("dropdown"+dvid).value;
+	var name = $('[name=dvname]').val();
+	var room = $('[name=room]').val();
+	if(name == ''){
+		alert('You have to enter your Device name');
+		return;
+	}
+	
 	if(room == ''){
 		alert('You have to select a Room first, If not have go to Room Manager and add your room');
 		return;
@@ -227,6 +270,7 @@
 		star:  star,
 		dvid:  dvid,
 		dvtype: dvtype,
+		dvname: name,
 		room: room,
 		},                       
         method: 'post',
@@ -255,6 +299,8 @@
   $('#show').load('acklistdata.php');
   $('#devicestatus').load('devicestatus.php');
   
+  
+  
   $(document).ready(function() {
 	setInterval(function () {
 		$('#show').load('acklistdata.php');
@@ -270,14 +316,12 @@
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
     <!-- Page level plugin JavaScript-->
-    <script src="vendor/chart.js/Chart.min.js"></script>
     <script src="vendor/datatables/jquery.dataTables.js"></script>
     <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin.min.js"></script>
     <!-- Custom scripts for this page-->
     <script src="js/sb-admin-datatables.min.js"></script>
-    <script src="js/sb-admin-charts.min.js"></script>
   </div>
 </body>
 
