@@ -120,6 +120,13 @@
         <div class="card-body">
           <div class="table-responsive">
             <table id="myTable2" class="table tablesorter"  width="100%" cellspacing="1">
+	<script>
+		function Room(rmid, rmname){
+			this.rmid = rmid;
+			this.rmname = rmname;
+		}
+		sessionStorage.setItem("listRoom","");
+	</script>
          
 <?php
 	$servername = "localhost";
@@ -140,15 +147,26 @@
               <td>
                 <div class="input-group mb-3">
                     <input required style="border-color: #0066FF; cursor:move;" class="indrag form-control rmname" type="text" id="valueid-<?php echo($i) ?>" style="margin-left:20px; margin-top: 20px" type="text" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)" value="<?php echo($row["rm_name"]) ?>" aria-describedby="basic-addon1">
-					 <form action="deleteroom.php" method="post" class="deleteRoom">
 					 <input id ='valuermid-<?php echo($i) ?>' class="rmid" name='rmid' type="text" value="<?php echo($row["rm_id"]) ?>" hidden/>
                      <div class="input-group-prepend">
-					 <button type='submit' style="border-color: black" class="btn bg-warning"><i class="fa fa-trash" id=""></i></button>
-					</form>
-                  </div>
+					 <button id='btndelete-<?php echo($i) ?>' style="border-color: black" class="btn bg-warning" data-toggle="modal" data-target="#kbidelete" onclick="setRow(<?php echo($i) ?>)"><i class="fa fa-trash" ></i></button>
+				  </div>
                 </div> 
               </td>
             </tr>
+			
+			<script>
+				var rm = new Room(<?php echo($row["rm_id"]) ?>,"<?php echo($row["rm_name"]) ?>");
+				if (sessionStorage.listRoom){
+					var list = JSON.parse(sessionStorage.listRoom);
+					list.push(rm);
+					sessionStorage.setItem("listRoom",JSON.stringify(list));
+				}else{
+					var list = [];
+					list.push(rm);
+					sessionStorage.setItem("listRoom",JSON.stringify(list));
+				}
+			</script>
 
 <?php
 			$i+=1;
@@ -157,8 +175,7 @@
 ?>
 	    <strong>Sorry! </strong>You don't have any room in here :(</p>
 <?php
-	}
-	$conn->close();	
+	}	
 ?> 
         </table>
       </div>
@@ -184,14 +201,6 @@
 </div>
    <!-- /.container-fluid-->
     <!-- /.content-wrapper-->
-
- 
-   
-
-    
-     
- 
- 
    
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
@@ -210,48 +219,102 @@
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="logout.php">Logout</a>
+            <button class="btn btn-primary" onclick="logout()">Logout</button>
           </div>
+        </div>
+      </div>
+    </div>
+	
+	<!-- Delete Modal -->
+	<div class="modal fade" id="kbidelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div  class="modal-header">
+            <h3  class="modal-title" id="exampleModalLabel">When delete where all of your devices will come ?</h3>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          
+          <div class="form-group">
+            <select  class="form-control" id="rmmoveslt" name="rmmoveslt">
+                    <option value="deleteall" selected>Remove all devices belong to this room</option>
+					<script>
+						
+							var list = JSON.parse(sessionStorage.getItem("listRoom"));
+							for(i = 0; i < list.length;i++){
+									document.write("<option value='"+list[i].rmid+"'> Move all devices to "+list[i].rmname+"</option>");
+								}
+					</script>
+						
+            </select>
+          </div>   
+          <button class="btn btn-primary btn-block" onclick="deleteRm()" >Delete</button>
+
+          </div>      
         </div>
       </div>
     </div>
 
 <script>
-if (sessionStorage.sysRoomMess) {
-    document.getElementById("server-results").innerHTML = sessionStorage.sysRoomMess
-} 
-if (sessionStorage.sysRoomMess2) {
-    document.getElementById("server-results2").innerHTML = sessionStorage.sysRoomMess
-} 
 
-function allowDrop(ev) {
-  ev.preventDefault();
-}
- 
-function drag(ev) {
-  ev.dataTransfer.setData("text", ev.target.id);
-}
- 
-function drop(ev) {
-  ev.preventDefault();
-  var idData = ev.dataTransfer.getData("text");
-  var idRmid = 'valuermid-'+idData.substring(8)
-  var data = document.getElementById(idData).value;
-  var dataRmid = document.getElementById(idRmid).value;
-  var dataBack = ev.target.value;
-  var idRmidBack = 'valuermid-'+ev.target.id.substring(8);
-  var dataRmidBack = document.getElementById(idRmidBack).value;
-  document.getElementById(idData).value = dataBack;
-  document.getElementById(idRmid).value = dataRmidBack;
-  document.getElementById(ev.target.id).value = data;
-  document.getElementById(idRmidBack).value = dataRmid;
-}
+	function setRow(rownum){
+		var row = rownum-1;
+		sessionStorage.setItem("row",row);
+		var size = document.getElementById("rmmoveslt").length;
+		for(i = 1; i < size;i++){
+			if(rownum == i){
+				document.getElementById("rmmoveslt").options[i].hidden="true";
+			}else{
+				document.getElementById("rmmoveslt").options[i].hidden="";
+			}
+		}
+	}
+	
+	if (sessionStorage.sysRoomMess) {
+		document.getElementById("server-results").innerHTML = sessionStorage.sysRoomMess
+	} 
+	if (sessionStorage.sysRoomMess2) {
+		document.getElementById("server-results2").innerHTML = sessionStorage.sysRoomMess
+	} 
+	
+	function allowDrop(ev) {
+	ev.preventDefault();
+	}
+	
+	function drag(ev) {
+	ev.dataTransfer.setData("text", ev.target.id);
+	}
+	
+	function drop(ev) {
+	ev.preventDefault();
+	var idData = ev.dataTransfer.getData("text");
+	var indexBefore = idData.substring(8);
+	var idRmid = 'valuermid-'+indexBefore
+	var idBtnDelete = '#btndelete-'+indexBefore
+	var data = document.getElementById(idData).value;
+	var dataRmid = document.getElementById(idRmid).value;
+	var attrBtnDelete = $(idBtnDelete).attr("onclick");
+	var dataBack = ev.target.value;
+	var indexAfter = ev.target.id.substring(8);
+	var idRmidBack = 'valuermid-'+indexAfter;
+	var dataRmidBack = document.getElementById(idRmidBack).value;
+	var idBtnDeleteBack = '#btndelete-'+indexAfter
+	var attrBtnDeleteBack = $(idBtnDeleteBack).attr("onclick");
+	document.getElementById(idData).value = dataBack;
+	document.getElementById(idRmid).value = dataRmidBack;
+	$(idBtnDelete).attr("onclick",attrBtnDeleteBack);
+	document.getElementById(ev.target.id).value = data;
+	document.getElementById(idRmidBack).value = dataRmid;
+	$(idBtnDeleteBack).attr("onclick",attrBtnDelete);
+	}
 
 	//Script for save the sort room list
 	function saveRm(){
 	    var rmnames = document.getElementsByClassName("rmname");
         var rmids = document.getElementsByClassName("rmid");
-		
+	
 		var data = [];
 		var data2 = [];
 		
@@ -283,38 +346,56 @@ function drop(ev) {
         });
 	}
 	
-	$(".deleteRoom").submit(function(event){
-	  
-    event.preventDefault(); //prevent default action 
-    var post_url = $(this).attr("action"); //get form action url
-    var request_method = $(this).attr("method"); //get form GET/POST method
-    var form_data = $(this).serialize(); //Encode form elements for submission
-    
-    $.ajax({
-        url : post_url,
-        type: request_method,
-        data : form_data
-    }).done(function(response){
-		sessionStorage.sysRoomMess = response
-		location.reload();
-    });
-  });
+	function deleteRm(){
+		var rownum = sessionStorage.row;
+		var rmid = document.getElementsByClassName("rmid")[rownum].defaultValue;
+		var	rmidmove = $('[name=rmmoveslt]').val();
+		console.log(rmidmove);
+		
+		$.ajax({
+			url: 'deleteroom.php', 
+			dataType: 'text',
+			cache: false,
+			data: {
+				rmid: rmid,
+				rmidmove: rmidmove,
+			},                       
+			method: 'post',
+			success: function(res){ 
+				sessionStorage.sysRoomMess = res;
+				location.reload();
+			}
+		});
+	}
   
-  	$(".addRoom").submit(function(event){
+	$(".addRoom").submit(function(event){
     event.preventDefault(); //prevent default action 
     var post_url = $(this).attr("action"); //get form action url
     var request_method = $(this).attr("method"); //get form GET/POST method
     var form_data = $(this).serialize(); //Encode form elements for submission
-    
-    $.ajax({
-        url : post_url,
-        type: request_method,
-        data : form_data
-    }).done(function(response){
-		sessionStorage.sysRoomMess2 = response
-		location.reload();
-    });
-  });
+		$.ajax({
+			url : post_url,
+			type: request_method,
+			data : form_data
+		}).done(function(response){
+			sessionStorage.sysRoomMess2 = response
+			location.reload();
+		});
+	});
+	
+	function logout(){
+		$.ajax({
+		url: 'logout.php', 
+		dataType: 'text',
+		cache: false,
+		data: {
+		},                       
+		method: 'post',
+		success: function(res){ 
+			location.reload();
+		}
+		});
+	}
 
 </script>
     <!-- Bootstrap core JavaScript-->

@@ -18,7 +18,19 @@
   <link href="css/sb-admin.css" rel="stylesheet">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
   <script src="./js/jquery.js"></script>
-<script src="./js/jquery-ui.js"></script>
+  <script src="./js/jquery-ui.js"></script>
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+  <!-- Page level plugin JavaScript-->
+  <script src="vendor/datatables/jquery.dataTables.js"></script>
+  <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin.min.js"></script>
+  <!-- Custom scripts for this page-->
+  <script src="js/sb-admin-datatables.min.js"></script>
 </head>
 <body class="fixed-nav bg-dark" id="page-top">
   <!-- Navigation-->
@@ -133,13 +145,33 @@
 		</div>
 		
 		<p>
+		<?php
+			$conn = new mysqli($servername, $username, $password, $dbname);
+			$sql = "SELECT regisphone, ssid,pwssid FROM account";
+			$resultacc = $conn->query($sql);
+			if ($resultacc->num_rows > 0) {
+				$rowacc = $resultacc->fetch_assoc();
+				if(!is_null($rowacc["regisphone"])){
+		?>
 			<div class="btn-group ">
-				<button class="btn bg-warning" ><i class="fas fa-mobile-alt" > Change</i></button>
-				<span class="btn btn-success" style="cursor: default; color: black" ><strong>Registered : </strong><i> 01248077279</i></span>
+				<button class="btn bg-warning" data-toggle="modal" data-target="#kbichangephone1" ><i class="fas fa-mobile-alt"> Change</i></button>
+				<span class="btn btn-success" style="cursor: default; color: black" ><strong>Registered : </strong><i> <?php echo($rowacc["regisphone"]) ?></i></span>
 			</div>
+		<?php
+				}else{			
+		?>
+			<div class="btn-group ">
+				<button class="btn bg-warning" data-toggle="modal" data-target="#kbichangephone1" ><i class="fas fa-mobile-alt"> Add</i></button>
+				<span class="btn btn-danger" style="cursor: default; color: black" >You haven't had registered phone number yet</span>
+			</div>
+		<?php
+				}
+			}
+		?>
+
 		</p>	
 	
-	<button style="margin-bottom: 15px;" class="btn bg-warning" ><i class="fa fa-key"> Change Admin's Password</i></button>
+	<button style="margin-bottom: 15px;" class="btn bg-warning" data-toggle="modal" data-target="#kbichangepass" ><i class="fa fa-key"> Change Admin's Password</i></button>
 	</br>
 	
 	<!-- <a class="btn btn-primary" href="turnonoff.php?state=on">Turn on device</a> -->
@@ -176,7 +208,7 @@
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="logout.php">Logout</a>
+            <button class="btn btn-primary" onclick="logout()">Logout</button>
           </div>
         </div>
       </div>
@@ -220,8 +252,79 @@
       </div>
     </div>
     <!-- end add -->
+	
+	<!-- Change phone Modal-->
+	<div class="modal fade" id="kbichangephone1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">    
+          <div class="modal-body">
+			<div class="form-group">
+				<h5>Enter a phone number that you want to register</h5>
+				<input class="form-control" type="text" name="phonechange">
+				<br>
+				<button type="button" class="btn btn-primary btn-block btn-next" onclick="captcha()" data-toggle="modal" data-target="#kbichangephone2">Next</button>
+			</div>    
+          </div>    
+        </div>
+      </div>
+    </div>
+    <!-- end -->
+
+    <!--Enter Capcha modal-->
+	<div class="modal fade" id="kbichangephone2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">  
+          <div class="modal-body">
+			<div class="form-group">
+				<h5>Enter a captcha sent to your phone</h5>
+				<input class="form-control" type="text" name="incaptcha">
+				<br>
+				<button id="nextsucss" class="btn btn-primary btn-block" onclick="checkcaptcha()" >Check</button>
+				<br>
+				<div id="check-results"></div>
+			</div>          
+          </div>          
+        </div>
+      </div>
+    </div>
+    <!-- end -->
+	
+	<!--Enter Capcha modal-->
+	<div class="modal fade" id="kbichangepass" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">  
+          <div class="modal-body">
+			<div class="form-group">
+				<h5>Enter a new password</h5>
+				<input class="form-control" type="password" name="passnew">
+				<br>
+				<h5>Reenter new password</h5>
+				<input class="form-control" type="password" name="repassnew">
+				<br>
+				<button class="btn btn-primary btn-block" onclick="changepass()"><div id='sttcaptcha'>Change Admin's Password</div></button>
+				<br>
+				<div id="change-results"></div>
+			</div>          
+          </div>          
+        </div>
+      </div>
+    </div>
+    <!-- end -->
 
 <script>
+   $("div[id^='kbichangephone']").each(function(){
+	var currentModal = $(this);
+		//click next
+		currentModal.find('.btn-next').click(function(){
+		console.log("In btn-next click");
+		currentModal.modal('hide');
+		//hide modal hiện tại    
+		currentModal.closest("div[id^='kbichangephone']").nextAll("div[id^='kbichangephone']").first().modal('show');
+		// Đây chính là code xử lý phần next modal, click btn-next -> close modal hiện tại --> tìm các modal tiếp theo --> trigger modal đầu tiên tiếp theo với .modal('show')
+		//Call back khi close modal hiện tại sẽ next tới tất cả cả modal còn lại và lấy cái tiếp theo đầu tiên cho nó show lên và cứ như vậy.
+	});
+  });
+
   function setRow(rownum){
 	sessionStorage.setItem("row",rownum);
   }
@@ -296,6 +399,82 @@
     });  
   };
   
+  function captcha(){
+	var phone = $('[name=phonechange]').val();
+	$.ajax({
+        url: 'sentcaptcha.php', 
+        dataType: 'text',
+        cache: false,
+        data: {
+		phone:  phone,
+		},                       
+        method: 'post',
+		success: function(res){
+			console.log(res);
+        }
+    }); 
+  }
+  
+  function checkcaptcha(){
+	var incaptcha = $('[name=incaptcha]').val();
+	var phone = $('[name=phonechange]').val();
+	$.ajax({
+        url: 'checkcaptcha.php', 
+        dataType: 'text',
+        cache: false,  
+        data: {
+			incaptcha: incaptcha,
+			phone: phone
+		},  		
+        method: 'post',
+        success: function(res){
+			if(res == 'okay'){
+				alert("The phone number "+$('[name=phonechange]').val()+" registerd successfully !!!");
+				location.reload();
+			}else{
+				$("#check-results").html(res);
+			}
+        }
+    }); 
+  }
+  
+  function changepass(){
+	var passnew = $('[name=passnew]').val();
+	var repassnew = $('[name=repassnew]').val();
+	$.ajax({
+        url: 'changepass.php', 
+        dataType: 'text',
+        cache: false,  
+        data: {
+			passnew: passnew,
+			repassnew: repassnew
+		},  		
+        method: 'post',
+        success: function(res){
+			if(res == 'okay'){
+				alert("The admin's password has changed successfully !!!");
+				location.reload();
+			}else{
+				$("#change-results").html(res);
+			}
+        }
+    }); 
+  }
+  
+  function logout(){
+	$.ajax({
+       url: 'logout.php', 
+       dataType: 'text',
+       cache: false,
+       data: {
+	},                       
+       method: 'post',
+       success: function(res){ 
+		location.reload();
+       }
+	});
+  }
+  
   $('#show').load('acklistdata.php');
   $('#devicestatus').load('devicestatus.php');
   
@@ -303,25 +482,21 @@
   
   $(document).ready(function() {
 	setInterval(function () {
-		$('#show').load('acklistdata.php');
-		$('#devicestatus').load('devicestatus.php')
+		if(document.body.scrollTop != 0){
+			localStorage.setItem('scroll_top', document.body.scrollTop);
+		}else{
+			localStorage.setItem('scroll_top', document.documentElement.scrollTop);
+		}
+		$('#show').load('acklistdata.php', function(){
+				if (localStorage.getItem('scroll_top') !== null)
+					window.scrollTo(0, parseInt(localStorage.getItem('scroll_top')));
+		});
 	}, 5000);
   });
 
 </script>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-    <!-- Page level plugin JavaScript-->
-    <script src="vendor/datatables/jquery.dataTables.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin.min.js"></script>
-    <!-- Custom scripts for this page-->
-    <script src="js/sb-admin-datatables.min.js"></script>
+
   </div>
 </body>
 

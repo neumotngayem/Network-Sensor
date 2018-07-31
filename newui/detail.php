@@ -423,13 +423,11 @@
       </div>
     </div>
    
-   
     <script>	
 	$('#show').load("detaildata.php?dvid='<?php echo($dvid) ?>'");
 	
 	$(document).ready(function() {
 		setInterval(function () {
-			var dvtype = $('[name=dvtype]').val();
 			if(document.body.scrollTop != 0){
 				localStorage.setItem('scroll_top', document.body.scrollTop);
 			}else{

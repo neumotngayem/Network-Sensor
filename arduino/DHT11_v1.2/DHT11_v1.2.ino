@@ -38,7 +38,7 @@ void loop() {
 
     if(inString.indexOf("ACKNO") != -1){
       //Get the index of str 'ACK' from incoming str
-      int indexAck = inString.indexOf("ACKYES");
+      int indexAck = inString.indexOf("ACKNO");
       //Data receive will be like DV1 ACK SEC 30
       //From indexSec we extract the device ID 
       String dvid = inString.substring(0,(indexAck -1));

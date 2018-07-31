@@ -11,6 +11,9 @@ if(isset($_POST['dvid']))
     $dvid = $_POST['dvid'];
     $sql = "DELETE FROM home WHERE device_id = '$dvid'";
 	if ($conn->query($sql) === TRUE) {
+		//Send the ACKNO to device
+		$call = "sudo python ../python/ackno.py $selected_dvid";
+		shell_exec($call);
 		echo("Deleted");
 	} else{ 
 		echo("Opps Error");

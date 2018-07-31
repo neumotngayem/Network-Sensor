@@ -287,7 +287,15 @@
 	  
 	$(document).ready(function() {
 		setInterval(function () {
-			$('#show').load('roomlistdata.php?id=<?php echo($rm_id) ?>')
+			if(document.body.scrollTop != 0){
+				localStorage.setItem('scroll_top', document.body.scrollTop);
+			}else{
+				localStorage.setItem('scroll_top', document.documentElement.scrollTop);
+			}			
+			$('#show').load('roomlistdata.php?id=<?php echo($rm_id) ?>', function(){
+				if (localStorage.getItem('scroll_top') !== null)
+					window.scrollTo(0, parseInt(localStorage.getItem('scroll_top')));
+			});
 		}, 5000);
 	});
 	
