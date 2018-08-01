@@ -14,3 +14,6 @@ port.write(mess)
 time.sleep(0.5)
 port.write(chr(26))
 print("SMS sending")
+time.sleep(5)
+reply = port.read(port.inWaiting())
+print reply
