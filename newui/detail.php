@@ -16,8 +16,9 @@
   <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
-   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <script src="./js/jquery.js"></script>
+  <script src="./js/jquery-ui.js"></script>
   <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
       <!-- Morris Charts CSS -->
   <link href="vendor/morrisjs/morris.css" rel="stylesheet">
@@ -34,7 +35,7 @@
 <body class="fixed-nav bg-dark" id="page-top">
   <!-- Navigation-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-    <a class="navbar-brand" href="index.html">Detail</a>
+     <a class="navbar-brand" style="color: white; cursor: default">Detail</a>
     
     <!-- button responsive -->
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -216,7 +217,12 @@
 				</tr>		
                 <tr>
                   <td style="text-align:center; "><strong>Warning<input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly /></strong></td>
-                  <td style="text-align: center;"><input type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger"></td>
+                  <td style="text-align: center;">
+					    <div class="btn-group ">
+							<button class="btn bg-warning" ><i class="fas fa-phone-volume"> Warning</i></button>
+							<span class="btn btn-danger" style="cursor: default; color: black" ><strong>Status: </strong><i>Off</i></span>
+						</div>
+				  </td>
                   <td style="text-align:center; "><strong>When<input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly /></strong></td>
                 </tr>
                 <tr>
@@ -269,11 +275,14 @@
                     </td>
 				</tr>
                 <tr>
-					<td colspan="3" style="text-align:center; ">
-						<strong>Warning<input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly/></strong>
-						<input type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
-						<strong><input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly/></strong>
-					</td> 	
+					<td></td>
+					<td style="text-align:center; ">
+						<div class="btn-group ">
+							<button class="btn bg-warning" ><i class="fas fa-phone-volume"> Warning</i></button>
+							<span class="btn btn-danger" style="cursor: default; color: black" ><strong>Status: </strong><i>Off</i></span>
+						</div>
+					</td> 
+					<td></td>
                 </tr>
 				<tr>
 					<td colspan="3">
@@ -315,9 +324,12 @@
 				</tr>
                 <tr>
                   <td style="text-align:center; "><strong>Warning<input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly/></strong></td>
-                  <td style="text-align: center;">
-                    <input type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
-                  </td>              
+                  <td  style="text-align: center;">
+                    	<div class="btn-group ">
+							<button class="btn bg-warning" ><i class="fas fa-phone-volume"> Warning</i></button>
+							<span class="btn btn-danger" style="cursor: default; color: black" ><strong>Status: </strong><i>Off</i></span>
+						</div>
+				  </td>              
                   <td style="text-align:center; "><strong> When air is under standard <span style="color: red;">*</span><input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly/></strong></td>
                 </tr> 
 				<tr>
@@ -383,7 +395,7 @@
          <form action="signin.php" method="post" class='signin'>
           <div class="form-group">
             <label for="exampleInputEmail1"><strong>User Name</strong></label>
-            <input required name='username' class="form-control"  id="exampleInputEmail1" type="text" aria-describedby="emailHelp" placeholder="Username">
+            <input readonly name='username' class="form-control"  id="exampleInputEmail1" type="text" value="admin">
           </div>
           <div class="form-group">
             <label for="exampleInputPassword1"><strong>Password</strong></label>
@@ -393,7 +405,7 @@
         </form>
 		<br>
         <div class="text-center">
-          <a class="d-block small" href="forgot-password.html">Forgot Password?</a>
+          <a class="d-block small" href="login.php">Forgot Password? Click here to go Login Page and reset your password</a>
         </div>
 		<br>
 		<div id="login-results"><!-- For server results --></div>
@@ -426,20 +438,20 @@
     <script>	
 	$('#show').load("detaildata.php?dvid='<?php echo($dvid) ?>'");
 	
-	$(document).ready(function() {
-		setInterval(function () {
-			if(document.body.scrollTop != 0){
-				localStorage.setItem('scroll_top', document.body.scrollTop);
-			}else{
-				localStorage.setItem('scroll_top', document.documentElement.scrollTop);
-			}
+	// $(document).ready(function() {
+		// setInterval(function () {
+			// if(document.body.scrollTop != 0){
+				// localStorage.setItem('scroll_top', document.body.scrollTop);
+			// }else{
+				// localStorage.setItem('scroll_top', document.documentElement.scrollTop);
+			// }
 			
-			$('#show').load("detaildata.php?dvid='<?php echo($dvid) ?>'", function(){
-				if (localStorage.getItem('scroll_top') !== null)
-					window.scrollTo(0, parseInt(localStorage.getItem('scroll_top')));
-			});
-		}, 2000);
-	});	
+			// $('#show').load("detaildata.php?dvid='<?php echo($dvid) ?>'", function(){
+				// if (localStorage.getItem('scroll_top') !== null)
+					// window.scrollTo(0, parseInt(localStorage.getItem('scroll_top')));
+			// });
+		// }, 2000);
+	// });	
 	
 	function logout(){
 		$.ajax({
@@ -458,7 +470,7 @@
 		
 	function editDvName(){
 		var dvid = $('[name=dvid]').val();
-		var dvname = $('[name=dvname]').val();
+		var dvname = $('[name=dvname]').val().trim();
 		if(dvname == ''){
 			alert('You have to enter your Device name');
 			return;
@@ -573,7 +585,21 @@
 		}
 		});
 	});
-
+	
+	$('warnstate').change(function() {
+		console.log("Hello");
+	})
+	
+	$(function() {
+		$('#warnbtn').off('change').change(function() {
+			var state = $(this).prop('checked')
+			if(state){
+				console.log("On");
+			}else{
+				console.log("Off");
+			}	
+		})
+	})
     </script>
 
 

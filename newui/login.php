@@ -23,7 +23,7 @@
 <body class="fixed-nav bg-dark" id="page-top">
   <!-- Navigation-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-    <a class="navbar-brand" href="login.php">Login</a>
+    <a class="navbar-brand" style="color: white; cursor: default">Login</a>
     
     <!-- button responsive -->
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,7 +100,7 @@
         <form action="signin.php" method="post" class='signin'>
           <div class="form-group">
             <label for="exampleInputUsername"><strong>Username</strong></label>
-            <input required name='username' class="form-control" id="exampleInputUsername" type="text" aria-describedby="emailHelp" placeholder="Username">
+            <input readonly name='username' class="form-control" id="exampleInputUsername" type="text" aria-describedby="emailHelp" value="admin">
           </div>
           <div class="form-group">
             <label for="exampleInputPassword"><strong>Password</strong></label>
@@ -111,7 +111,7 @@
         </form>
 		<br>
         <div class="text-center">
-          <a class="d-block small" href="forgot-password.html">Forgot Password?</a>
+          <a style="cursor: pointer; color: #007bff;" class="d-block small" onclick="captcha()" data-toggle="modal" data-target="#kbiresetpass">Reset Admin's Password</a>
         </div>
 		<br>
 		<div id="server-results"><!-- For server results --></div>
@@ -129,24 +129,25 @@
     <a class="scroll-to-top rounded" href="#page-top">
       <i class="fa fa-angle-up"></i>
     </a>
-    <!-- Logout Modal-->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	
+	<!--Enter Capcha modal-->
+	<div class="modal fade" id="kbiresetpass" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="login.html">Logout</a>
-          </div>
+        <div class="modal-content">  
+          <div class="modal-body">
+			<div class="form-group">
+				<h5>Enter a captcha sent to your phone</h5>
+				<input class="form-control" type="text" name="incaptcha">
+				<br>
+				<button id="nextsucss" class="btn btn-primary btn-block" onclick="checkcaptcha()" >Check</button>
+				<br>
+				<div id="check-results"></div>
+			</div>          
+          </div>          
         </div>
       </div>
     </div>
+    <!-- end -->
 
 <script>
   $(".signin").submit(function(event){
@@ -169,28 +170,55 @@
 	}
     });
   });
+  
+  function captcha(){
+	$.ajax({
+        url: 'sentcaptcha.php', 
+        dataType: 'text',
+        cache: false,
+        data: {
+		  phone:'reset'  
+		},                       
+        method: 'post'
+    }); 
+  }
+
+  function checkcaptcha(){
+	var incaptcha = $('[name=incaptcha]').val();
+	$.ajax({
+        url: 'checkcaptcha.php', 
+        dataType: 'text',
+        cache: false,  
+        data: {
+			incaptcha: incaptcha,
+			phone: 'reset'
+		},  		
+        method: 'post',
+        success: function(res){
+			if(res == 'resetokay'){
+				alert("Your admin's password has been reset to default password successfully !!!");
+				location.reload();
+			}else{
+				$("#check-results").html(res);
+			}
+        }
+    }); 
+  }
 </script>
    
 
     <!-- Bootstrap core JavaScript-->
-     <!-- Bootstrap core JavaScript-->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <!-- Core plugin JavaScript-->
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
     <!-- Page level plugin JavaScript-->
-    <script src="vendor/chart.js/Chart.min.js"></script>
     <script src="vendor/datatables/jquery.dataTables.js"></script>
     <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin.min.js"></script>
     <!-- Custom scripts for this page-->
     <script src="js/sb-admin-datatables.min.js"></script>
-    <script src="js/sb-admin-charts.min.js"></script>
   </div>
 </body>
 

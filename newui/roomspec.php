@@ -35,7 +35,7 @@
 <body class="fixed-nav bg-dark" id="page-top">
   <!-- Navigation-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-    <a class="navbar-brand" href="index.html"><?php echo($row2["rm_name"]) ?></a>
+     <a class="navbar-brand" style="color: white; cursor: default"><?php echo($row2["rm_name"]) ?></a>
     
     <!-- button responsive -->
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -181,7 +181,7 @@
          <form action="signin.php" method="post" class='signin'>
           <div class="form-group">
             <label for="exampleInputEmail1"><strong>User Name</strong></label>
-            <input required name='username' class="form-control"  id="exampleInputEmail1" type="text" aria-describedby="emailHelp" placeholder="Username">
+            <input readonly name='username' class="form-control"  id="exampleInputEmail1" type="text" value="admin">
           </div>
           <div class="form-group">
             <label for="exampleInputPassword1"><strong>Password</strong></label>
@@ -191,7 +191,7 @@
         </form>
 		<br>
         <div class="text-center">
-          <a class="d-block small" href="forgot-password.html">Forgot Password?</a>
+          <a class="d-block small" href="login.php">Forgot Password? Click here to go Login Page and reset your password</a>
         </div>
 		<br>
 		<div id="login-results"><!-- For server results --></div>
@@ -329,14 +329,12 @@
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
     <!-- Page level plugin JavaScript-->
-    <script src="vendor/chart.js/Chart.min.js"></script>
     <script src="vendor/datatables/jquery.dataTables.js"></script>
     <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin.min.js"></script>
     <!-- Custom scripts for this page-->
     <script src="js/sb-admin-datatables.min.js"></script>
-    <script src="js/sb-admin-charts.min.js"></script>
   </div>
 </body>
 

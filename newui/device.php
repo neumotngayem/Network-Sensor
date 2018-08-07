@@ -35,7 +35,7 @@
 <body class="fixed-nav bg-dark" id="page-top">
   <!-- Navigation-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-    <a class="navbar-brand" href="index.html">Device Manager</a>
+    <a class="navbar-brand" style="color: white; cursor: default">Device Manager</a>
     
     <!-- button responsive -->
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -125,7 +125,10 @@
   <div class="content-wrapper">
     <div class="container">
 	
-	
+	    <div class="card mb-3">
+        <div class="card-header"><b>WX-Net Host Config</b></div>
+        <div class="card-body">
+		
 		<div class="form-inline">
 		<div class="form-group">
 		<select class="form-control" id="">
@@ -152,13 +155,25 @@
 			if ($resultacc->num_rows > 0) {
 				$rowacc = $resultacc->fetch_assoc();
 				if(!is_null($rowacc["regisphone"])){
+					$_SESSION['regisphone'] = $rowacc["regisphone"];
 		?>
-			<div class="btn-group ">
+		<p>
+			<div class="btn-group">
 				<button class="btn bg-warning" data-toggle="modal" data-target="#kbichangephone1" ><i class="fas fa-mobile-alt"> Change</i></button>
-				<span class="btn btn-success" style="cursor: default; color: black" ><strong>Registered : </strong><i> <?php echo($rowacc["regisphone"]) ?></i></span>
+				<span class="btn btn-success" style="cursor: default; color: black" ><strong>Registered: </strong><i> <?php echo($_SESSION['regisphone']) ?></i></span>
+			</div>
+			</br>
+		</p>
+			<div class="btn-group table-responsive">
+				<button style="color: black; font-weight: bold;" type="button" class="btn btn-primary" onclick="calltest()">Call Test</button>
+				<button style="color: black; font-weight: bold;" type="button" class="btn btn-danger" onclick="smstest()">SMS Test</button>
+				<button style="color: black; font-weight: bold;" type="button" class="btn btn-warning" onclick="balance()">Balance</button>
+				<button style="color: black; font-weight: bold;" type="button" class="btn btn-secondary" onclick="addmoney()">Add Money</button>
+				<span id='btngsm' class="btn btn-success" style="cursor: default; color: black" ><strong>Test status: </strong><i id="gsmtest">Not yet</i></span>
 			</div>
 		<?php
-				}else{			
+				}else{
+			$_SESSION['regisphone'] = NULL;
 		?>
 			<div class="btn-group ">
 				<button class="btn bg-warning" data-toggle="modal" data-target="#kbichangephone1" ><i class="fas fa-mobile-alt"> Add</i></button>
@@ -174,6 +189,11 @@
 	<button style="margin-bottom: 15px;" class="btn bg-warning" data-toggle="modal" data-target="#kbichangepass" ><i class="fa fa-key"> Change Admin's Password</i></button>
 	</br>
 	
+	
+	</div>
+	<div class=" card-footer small text-muted"></div>
+	</div>
+
 	<!-- <a class="btn btn-primary" href="turnonoff.php?state=on">Turn on device</a> -->
       <!-- Example DataTables Card-->
     <div class="card mb-3">
@@ -262,6 +282,7 @@
 				<h5>Enter a phone number that you want to register</h5>
 				<input class="form-control" type="text" name="phonechange">
 				<br>
+				<button type="button" class="btn btn-success btn-block" onclick="calltestregis()">Call Test</button>
 				<button type="button" class="btn btn-primary btn-block btn-next" onclick="captcha()" data-toggle="modal" data-target="#kbichangephone2">Next</button>
 			</div>    
           </div>    
@@ -354,7 +375,7 @@
 	var star = document.getElementsByName("star")[rownum].defaultValue;
 	var dvid = document.getElementsByName("dvid")[rownum].defaultValue;
 	var dvtype = document.getElementsByName("dvtype")[rownum].defaultValue;
-	var name = $('[name=dvname]').val();
+	var name = $('[name=dvname]').val().trim();
 	var room = $('[name=room]').val();
 	if(name == ''){
 		alert('You have to enter your Device name');
@@ -400,20 +421,42 @@
   };
   
   function captcha(){
-	var phone = $('[name=phonechange]').val();
+	var phone = $('[name=phonechange]').val().trim();
+	if(phone == ''){
+		alert("You haven't enter any phone number !!!");
+		return;
+	}
 	$.ajax({
         url: 'sentcaptcha.php', 
         dataType: 'text',
         cache: false,
         data: {
-		phone:  phone,
+		phone:  phone
 		},                       
         method: 'post',
-		success: function(res){
-			console.log(res);
-        }
     }); 
   }
+  
+  function calltestregis(){
+	var phone = $('[name=phonechange]').val().trim();
+	if(phone == ''){
+		alert("You haven't enter any phone number !!!");
+		return;
+	}
+	
+	$.ajax({
+        url: 'call.php', 
+        dataType: 'text',
+        cache: false,
+        data: {
+		phone: phone
+		},                       
+        method: 'post',
+        success: function(res){
+			alert(res);
+        }
+    });  
+  };
   
   function checkcaptcha(){
 	var incaptcha = $('[name=incaptcha]').val();
@@ -460,7 +503,96 @@
         }
     }); 
   }
+  <?php
+	if(!is_null($_SESSION['regisphone'])){
+  ?>
+ 
+  function calltest(){
+	$("#btngsm").removeClass("btn-success");
+	$("#btngsm").removeClass("btn-danger");
+	$("#btngsm").addClass("btn-warning");
+	$("#gsmtest").html("Waiting");
+	$.ajax({
+        url: 'call.php', 
+        dataType: 'text',
+        cache: false,
+        data: {
+		phone:  '<?php echo($_SESSION['regisphone']) ?>'
+		},                       
+        method: 'post',
+        success: function(res){
+			if(res == 'okay'){
+				$("#btngsm").removeClass("btn-warning");
+				$("#btngsm").addClass("btn-success");
+				$("#gsmtest").html("Test success ! Your phone is ringing");				
+			}else{
+				$("#btngsm").removeClass("btn-warning");
+				$("#btngsm").addClass("btn-danger");
+				$("#gsmtest").html("Test fail ! Try again");	
+			}
+        }
+    });  
+  };
   
+  function smstest(){
+	$("#btngsm").removeClass("btn-success");
+	$("#btngsm").removeClass("btn-danger");
+	$("#btngsm").addClass("btn-warning");
+	$("#gsmtest").html("Waiting");
+	$.ajax({
+        url: 'sms.php', 
+        dataType: 'text',
+        cache: false,
+        data: {
+		phone:  '<?php echo($_SESSION['regisphone']) ?>',
+		mess: 'Test message from WX-Net host'
+		},                       
+        method: 'post',
+        success: function(res){
+			if(res == 'okay'){
+				$("#btngsm").removeClass("btn-warning");
+				$("#btngsm").addClass("btn-success");
+				$("#gsmtest").html("Test success ! Your phone is ringing");
+			}else{
+				$("#btngsm").removeClass("btn-warning");
+				$("#btngsm").addClass("btn-danger");
+				$("#gsmtest").html("Test fail ! Try again");
+			}	
+        }
+    });  
+  };
+  
+  function balance(){
+	$("#btngsm").removeClass("btn-success");
+	$("#btngsm").removeClass("btn-danger");
+	$("#btngsm").addClass("btn-warning");
+	$("#gsmtest").html("Waiting");
+	$.ajax({
+        url: 'balance.php', 
+        dataType: 'text',
+        cache: false,
+        data: {
+		},                       
+        method: 'post',
+        success: function(res){
+			if(res != 'fail'){
+				$("#btngsm").removeClass("btn-warning");
+				$("#btngsm").addClass("btn-success");
+				$("#gsmtest").html("Check balance success !!");
+				alert(res);
+			}else{
+				$("#btngsm").removeClass("btn-warning");
+				$("#btngsm").addClass("btn-danger");
+				$("#gsmtest").html("Test fail ! Try again");
+			}
+        }
+    });  
+  };
+  <?php
+	}
+  ?>
+
+
   function logout(){
 	$.ajax({
        url: 'logout.php', 

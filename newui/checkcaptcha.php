@@ -10,14 +10,22 @@ if(isset($_POST['incaptcha']) && isset($_POST['phone']))
 {	
 	$incaptcha = $_POST['incaptcha'];
 	$phone = $_POST['phone'];
-	//if($_SESSION['captcha'] == $incaptcha){
-	if('okay' == $incaptcha){
-		$sql = "UPDATE account SET regisphone='$phone'";
-		$conn->query($sql);
-		echo("okay");
+
+	if($_SESSION['captcha'] == $incaptcha){
+		if($phone != "reset"){
+			$sql = "UPDATE account SET regisphone='$phone'";
+			$conn->query($sql);
+			echo("okay");
+		}else{
+			$resetpass = md5('admin');
+			$sql = "UPDATE account SET pass='$resetpass'";
+			$conn->query($sql);
+			echo("resetokay");
+		}
 	}else{
 		echo("Your input captcha is not correct :(");
 	}
+
 }
 
 ?>

@@ -27,7 +27,7 @@
         <?php
 			}else{
 		?>
-		<i class="fa fa-star" id="demo" style=" color: <?php echo ($row["fav"] == 1) ? "#ffcc00": "black"; ?>;"></i><b> <?php echo($row["device_id"]); ?> Detail</b> Configure
+		<i class="fa fa-star" id="demo" style=" color: <?php echo ($row["fav"] == 1) ? "#ffcc00": "black"; ?>;"></i><b> <?php echo($row["device_name"]); ?></b>
 		<?php
 			}
 		?>
@@ -77,12 +77,7 @@
 		$cache_life = '300';
 		$timesys = time();
 		while($rowDetail = $resultDetail->fetch_assoc()){
-			$comparetime = strtotime($rowDetail['timestamp']);
-	
-			if(($timesys- $comparetime) <= $cache_life){
-				echo ($comparetime);
-				$chart_data .= "{ y: '".$rowDetail['timestamp']."', a: ".$rowDetail['temp'].", b: ".$rowDetail['humi']." }, ";
-			}
+				$chart_data .= "{ y: '".$rowDetail['timestamp']."', a: ".$rowDetail['temp'].", b: ".$rowDetail['humi']." }, ";		
 		}
 		$chart_data = substr($chart_data, 0, -2);
 		?>
@@ -116,7 +111,7 @@
                 </tr>              
                 <tr>
                     <td style="text-align:center; "><strong>CO: <input class="form-control-plaintext" style="width:70px; display: inherit; font-style: italic;" type="text"  value ="<?php echo($row["co"]); ?> PPM" readonly/></strong></td>
-                    <td style="text-align:center; "><strong>CO2: <input class="form-control-plaintext" style="width:70px; display: inherit; font-style: italic;" type="text"  value ="<?php echo($row["co2"]); ?> PPM" readonly/></strong></td>
+                    <td style="text-align:center; "><strong>CO2: <input class="form-control-plaintext" style="width:100px; display: inherit; font-style: italic;" type="text"  value ="<?php echo($row["co2"]); ?> PPM" readonly/></strong></td>
                     <td style="text-align:center; "><strong>Ethanol: <input class="form-control-plaintext" style="width:70px; display: inherit; font-style: italic;" type="text"  value ="<?php echo($row["ethanol"]); ?> PPM" readonly/></strong></td>   
                 </tr>
                 <tr>
@@ -128,6 +123,39 @@
             </table>     
           </div>
         </div>
+		<div class="col-lg-12">
+           <div class="panel panel-default">
+               <div class="panel-heading">
+                   Air Quality Line Chart
+               </div>
+               <!-- /.panel-heading -->
+               <div class="panel-body">
+                   <div id="morris-area-chart"></div>
+               </div>
+               <!-- /.panel-body -->
+           </div>
+           <!-- /.panel -->
+        </div>        
+		<?php
+		$sqlDetail = "SELECT co2, co, ethanol, toluene, acetone, timestamp FROM mq135 WHERE device_id=$dvid AND timestamp > date_sub(now(), interval 5 minute)";
+		$resultDetail = $conn->query($sqlDetail);
+		$chart_data='';
+		while($rowDetail = $resultDetail->fetch_assoc()){
+				$chart_data .= "{ y: '".$rowDetail['timestamp']."', a: ".$rowDetail['co2'].", b: ".$rowDetail['co'].", c: ".$rowDetail['ethanol'].", d: ".$rowDetail['toluene'].", e: ".$rowDetail['acetone']." }, ";		
+		}
+		$chart_data = substr($chart_data, 0, -2);
+		?>
+	<script>
+	Morris.Line({
+		element: 'morris-area-chart',
+		data: [<?php echo $chart_data; ?>],
+		xkey: 'y',
+		ykeys: ['a', 'b', 'c', 'd', 'e'],
+		labels: ['CO2', 'CO', 'Ethanol', 'Toluene', 'Acetone'],
+		pointFillColors:['#ffffff'],
+		pointStrokeColors: ['black'],
+	});
+	</script>
 	<?php
 		}
 	?>
