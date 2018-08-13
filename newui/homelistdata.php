@@ -6,7 +6,7 @@
 	$dbname = "iot";
 	// Create connection
 	$conn = new mysqli($servername, $username, $password, $dbname);
-	$sql = "SELECT device_id, device_name, fav, type, temp, humi, open, co, co2, sec, loca_id, DATE_FORMAT(timestamp, '%H:%i:%s') as time FROM home WHERE fav=1";
+	$sql = "SELECT device_id, device_name, fav, type, temp, humi, open, co, co2, loca_id, DATE_FORMAT(timestamp, '%H:%i:%s') as time FROM home WHERE fav=1";
 	$result = $conn->query($sql);
 	if ($result->num_rows > 0) {
 		// output data of each row
@@ -96,7 +96,7 @@
                 <tr>
                   <td><i class="fa fa-microchip" id="demo" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="dvid" value ="<?php echo($row["device_id"]) ?>" readonly /></td>
                   <td><i class="fa fa-th" id="demo" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="dvtype" value ="<?php echo($row["type"]) ?>" readonly /></td>
-                  <td><strong>CO2: <input class="form-control-plaintext" style="padding-top: 10px; width:60px; display: inherit;  font-style: italic;" type="text" name="dvid" value ="<?php echo($row["co2"]) ?> PPM" readonly /></strong></td>
+                  <td><strong>CO2: <input class="form-control-plaintext" style="padding-top: 10px; width:90px; display: inherit;  font-style: italic;" type="text" name="dvid" value ="<?php echo($row["co2"]) ?> PPM" readonly /></strong></td>
                   <td><strong>CO: <input class="form-control-plaintext" style="padding-top: 10px; width:70px; display: inherit;  font-style: italic;" type="text" name="dvid" value ="<?php echo($row["co"]) ?> PPM" readonly /></strong></td>
                   <td><i class="fa fa-info-circle" id="" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="" value ="Okay" readonly /></td>
                   <td><i class="fa fa-clock-o" id="" style="font-size: 25px;"></i> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="" value ="<?php echo($row["time"]) ?>" readonly /></td>

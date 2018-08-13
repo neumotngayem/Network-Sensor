@@ -337,7 +337,6 @@
 	var currentModal = $(this);
 		//click next
 		currentModal.find('.btn-next').click(function(){
-		console.log("In btn-next click");
 		currentModal.modal('hide');
 		//hide modal hiện tại    
 		currentModal.closest("div[id^='kbichangephone']").nextAll("div[id^='kbichangephone']").first().modal('show');

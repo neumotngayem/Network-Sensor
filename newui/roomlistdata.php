@@ -7,7 +7,7 @@
 	$rm_id = $_GET["id"];
 	// Create connection
 	$conn = new mysqli($servername, $username, $password, $dbname);
-	$sql = "SELECT device_id, device_name, fav, type, temp, humi, open, co, co2, sec, loca_id, DATE_FORMAT(timestamp, '%H:%i:%s') as time FROM home WHERE loca_id=".$rm_id;
+	$sql = "SELECT device_id, device_name, fav, type, temp, humi, open, co, co2, loca_id, DATE_FORMAT(timestamp, '%H:%i:%s') as time FROM home WHERE loca_id=".$rm_id;
 	$result = $conn->query($sql);
 	if ($result->num_rows > 0) {
 		// output data of each row

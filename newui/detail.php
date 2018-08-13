@@ -137,7 +137,7 @@
 		</br>
 		<?php
 			$dvid = $_GET["dvid"];
-			$sql = "SELECT type,sec,loca_id FROM home WHERE device_id='$dvid'";
+			$sql = "SELECT type,warn,loca_id,cmpsign1,warntemp,cmpsign2,warnhumi FROM home WHERE device_id='$dvid'";
 			$result = $conn->query($sql);
 			if ($result->num_rows > 0 && !is_null($_SESSION['user_id']) ) {
 			$row = $result->fetch_assoc();
@@ -199,28 +199,13 @@
                       </select>
                   </td>
                   <td></td>
-                </tr>
-				<tr>
-					<td style="text-align:center; "><strong>Update After<input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly/></strong></td>
-					<td>
-					<select  class="form-control" id="chgtime" >
-                        <option <?php echo ($row["sec"] == 5) ? "selected" : ""; ?> value="5" >5 second</option>
-						<option <?php echo ($row["sec"] == 10) ? "selected" : ""; ?> value="10">10 second</option>
-						<option <?php echo ($row["sec"] == 15) ? "selected" : ""; ?> value="15">15 second</option>
-						<option <?php echo ($row["sec"] == 20) ? "selected" : ""; ?> value="20">20 second</option>
-						<option <?php echo ($row["sec"] == 30) ? "selected" : ""; ?> value="30">30 second</option>
-                    </select>
-					</td>
-					<td >
-                       <button class="btn btn-block bg-default" onclick="changeTime()" ><strong>Change </strong></button>
-                    </td>
-				</tr>		
+                </tr>	
                 <tr>
                   <td style="text-align:center; "><strong>Warning<input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly /></strong></td>
                   <td style="text-align: center;">
 					    <div class="btn-group ">
-							<button class="btn bg-warning" ><i class="fas fa-phone-volume"> Warning</i></button>
-							<span class="btn btn-danger" style="cursor: default; color: black" ><strong>Status: </strong><i>Off</i></span>
+							<button class="btn bg-warning" onclick="editWarn(<?php echo($row["warn"]); ?>)"><i class="fas fa-comment-alt"> Warning</i></button>
+							<span class="btn <?php echo ($row["warn"] == 1) ? "btn-success": "btn-danger"; ?>" style="cursor: default; color: black" ><strong>Status: </strong><i><?php echo ($row["warn"] == 1) ? "On": "Off"; ?></i></span>
 						</div>
 				  </td>
                   <td style="text-align:center; "><strong>When<input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly /></strong></td>
@@ -228,28 +213,36 @@
                 <tr>
                   <td style="text-align:center; "><strong>Temparature<input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly /></strong></td> 
                   <td>
-                      <select  class="form-control" id="" >
-                        <option selected>></option>
-                        <option value="1">=</option>
-                        <option value="2"><</option>
+                      <select onchange="cmpsign1chg()" <?php echo ($row["warn"] == 1) ? "disabled": ""; ?> class="form-control" id="cmpsign1" >
+						<option <?php echo ($row["cmpsign1"] == 0) ? "selected": ""; ?> value="0">Not set</option>
+                        <option <?php echo ($row["cmpsign1"] == 1) ? "selected": ""; ?> value="1">></option>
+                        <option <?php echo ($row["cmpsign1"] == 2) ? "selected": ""; ?> value="2">=</option>
+                        <option <?php echo ($row["cmpsign1"] == 3) ? "selected": ""; ?> value="3"><</option>
                       </select>
                   </td>
-                 <td style="text-align:center; "><strong> <input class="form-control" style="width:60px; display: inherit; " type="text" value=" " />  &#8451 </strong></td>
+                 <td style="text-align:center; "><strong> <input id="warntempinput" class="form-control" <?php if(($row["warn"] == 1) || ($row["cmpsign1"] == 0)) echo("disabled") ?> style="width:60px; display: inherit;" name="warntemp" type="text" value="<?php echo($row["warntemp"]); ?>" />  &#8451 </strong></td>
                 </tr>
                 <tr>
 
                    <td style="text-align:center; "><strong>Humidity<input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly/></strong></td>
                   
                   <td>
-                      <select  class="form-control" id="" >
-                        <option selected>></option>
-                        <option value="1">=</option>
-                        <option value="2"><</option>
+                      <select onchange="cmpsign2chg()" <?php echo ($row["warn"] == 1) ? "disabled": ""; ?>  class="form-control" id="cmpsign2" >
+						<option <?php echo ($row["cmpsign2"] == 0) ? "selected": ""; ?> value="0">Not set</option>
+						<option <?php echo ($row["cmpsign2"] == 1) ? "selected": ""; ?> value="1">></option>
+                        <option <?php echo ($row["cmpsign2"] == 2) ? "selected": ""; ?> value="2">=</option>
+                        <option <?php echo ($row["cmpsign2"] == 3) ? "selected": ""; ?> value="3"><</option>
                       </select>
                   </td>
-                 <td style="text-align:center; "><strong> <input class="form-control" style="width:60px; display: inherit; " type="text" value=" " /> %</strong></td>
+                 <td style="text-align:center; "><strong> <input id="warnhumiinput" class="form-control" <?php if(($row["warn"] == 1) || ($row["cmpsign2"] == 0)) echo("disabled") ?> style="width:60px; display: inherit;" name="warnhumi" type="text" value="<?php echo($row["warnhumi"]); ?>" /> %</strong></td>
                 </tr>
-
+				<tr>
+					<td colspan="3">
+						<span style="color: red;">* </span>Warning of DHT11 will take by SMS
+						</br>
+						<span style="color: red;">* </span>Data of DHT11 sensor will store in 5 days
+					</td>
+				</tr>
 		<?php
 			}else if($row["type"] == "MC52" ){
 		?>     
@@ -264,29 +257,21 @@
 					<span style="color: red; font-size:larger;">*</span>
 				  </td>
                 </tr>
-				<tr>
-					<td style="text-align:center; "><strong>Update After<input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly/></strong></td>
-					<td>
-					<select disabled="true" class="form-control" id="chgtime" >
-                        <option selected>1 second</option>
-                    </select>
-					</td>
-					<td >
-                    </td>
-				</tr>
                 <tr>
 					<td></td>
 					<td style="text-align:center; ">
-						<div class="btn-group ">
-							<button class="btn bg-warning" ><i class="fas fa-phone-volume"> Warning</i></button>
-							<span class="btn btn-danger" style="cursor: default; color: black" ><strong>Status: </strong><i>Off</i></span>
+					    <div class="btn-group ">
+							<button class="btn bg-warning" onclick="editWarn(<?php echo($row["warn"]); ?>)"><i class="fas fa-phone-volume"> Warning</i></button>
+							<span class="btn <?php echo ($row["warn"] == 1) ? "btn-success": "btn-danger"; ?>" style="cursor: default; color: black" ><strong>Status: </strong><i><?php echo ($row["warn"] == 1) ? "On": "Off"; ?></i></span>
 						</div>
 					</td> 
 					<td></td>
                 </tr>
 				<tr>
 					<td colspan="3">
-						<span style="color: red;">* </span>To avoid sever overload, data of MC52 sensor will store only 24h
+						<span style="color: red;">* </span>Warning of MC52 will take by phone call
+						</br>
+						<span style="color: red;">* </span>Data of MC52 sensor will store only 24h
 					</td>
 				</tr>
 		<?php		
@@ -307,34 +292,21 @@
                   </td>
                   <td></td>
                 </tr>
-				<tr>
-					<td style="text-align:center; "><strong>Update After<input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly/></strong></td>
-					<td>
-					<select  class="form-control" id="chgtime" >
-                        <option <?php echo ($row["sec"] == 5) ? "selected" : ""; ?> value="5" >5 second</option>
-						<option <?php echo ($row["sec"] == 10) ? "selected" : ""; ?> value="10">10 second</option>
-						<option <?php echo ($row["sec"] == 15) ? "selected" : ""; ?> value="15">15 second</option>
-						<option <?php echo ($row["sec"] == 20) ? "selected" : ""; ?> value="20">20 second</option>
-						<option <?php echo ($row["sec"] == 30) ? "selected" : ""; ?> value="30">30 second</option>
-                    </select>
-					</td>
-					<td >
-                       <button class="btn btn-block bg-default" onclick="changeTime()" ><strong>Change </strong></button>
-                    </td>
-				</tr>
                 <tr>
                   <td style="text-align:center; "><strong>Warning<input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly/></strong></td>
-                  <td  style="text-align: center;">
-                    	<div class="btn-group ">
-							<button class="btn bg-warning" ><i class="fas fa-phone-volume"> Warning</i></button>
-							<span class="btn btn-danger" style="cursor: default; color: black" ><strong>Status: </strong><i>Off</i></span>
+                  <td style="text-align: center;">
+					    <div class="btn-group ">
+							<button class="btn bg-warning" onclick="editWarn(<?php echo($row["warn"]); ?>)"><i class="fas fa-comment-alt"> Warning</i></button>
+							<span class="btn <?php echo ($row["warn"] == 1) ? "btn-success": "btn-danger"; ?>" style="cursor: default; color: black" ><strong>Status: </strong><i><?php echo ($row["warn"] == 1) ? "On": "Off"; ?></i></span>
 						</div>
 				  </td>              
-                  <td style="text-align:center; "><strong> When air is under standard <span style="color: red;">*</span><input class="form-control-plaintext" style="width:60px; display: inherit;" type="text"  readonly/></strong></td>
+                  <td style="text-align:center; "></td>
                 </tr> 
 				<tr>
 					<td colspan="3">
-						<span style="color: red;">* </span>Base on the air quality standard of United States Department of Labor: <a target="_blank" rel="noopener noreferrer" href="https://www.osha.gov/pls/oshaweb/owadisp.show_document?p_table=STANDARDS&p_id=9992">Link Refer</a>
+						<span style="color: red;">* </span>Warning of MQ135 will take by SMS
+						</br>
+						<span style="color: red;">* </span>Data of MQ135 sensor will store in 5 days
 					</td>
 				</tr>
 		<?php
@@ -438,20 +410,20 @@
     <script>	
 	$('#show').load("detaildata.php?dvid='<?php echo($dvid) ?>'");
 	
-	// $(document).ready(function() {
-		// setInterval(function () {
-			// if(document.body.scrollTop != 0){
-				// localStorage.setItem('scroll_top', document.body.scrollTop);
-			// }else{
-				// localStorage.setItem('scroll_top', document.documentElement.scrollTop);
-			// }
+	$(document).ready(function() {
+		setInterval(function () {
+			if(document.body.scrollTop != 0){
+				localStorage.setItem('scroll_top', document.body.scrollTop);
+			}else{
+				localStorage.setItem('scroll_top', document.documentElement.scrollTop);
+			}
 			
-			// $('#show').load("detaildata.php?dvid='<?php echo($dvid) ?>'", function(){
-				// if (localStorage.getItem('scroll_top') !== null)
-					// window.scrollTo(0, parseInt(localStorage.getItem('scroll_top')));
-			// });
-		// }, 2000);
-	// });	
+			$('#show').load("detaildata.php?dvid='<?php echo($dvid) ?>'", function(){
+				if (localStorage.getItem('scroll_top') !== null)
+					window.scrollTo(0, parseInt(localStorage.getItem('scroll_top')));
+			});
+		}, 2000);
+	});	
 	
 	function logout(){
 		$.ajax({
@@ -520,7 +492,7 @@
 		 chgtime: chgtime,
 		},                       
         method: 'post',
-        success: function(res){ 
+        success: function(res){
 		 location.reload();
         }
 		});	
@@ -528,12 +500,14 @@
 		
 	function deleteDevice(){
 		var dvid = $('[name=dvid]').val();
+		var dvtype = $('[name=dvtype]').val();
 		$.ajax({
         url: 'deletedevice.php', 
         dataType: 'text',
         cache: false,
         data: {
-		 dvid: dvid
+		 dvid: dvid,
+		 dvtype: dvtype
 		},                       
         method: 'post',
         success: function(res){ 
@@ -555,14 +529,78 @@
         cache: false,
         data: {
 			fav: fav,
-			dvid: dvid,
+			dvid: dvid
 		},                       
         method: 'post',
         success: function(res){ 
-			sessionStorage.sysRoomSpecMess = res;
 			location.reload();
         }
 		});
+	}
+	
+	function editWarn(state){
+		var dvid = $('[name=dvid]').val();
+		var dvtype = $('[name=dvtype]').val();
+		var cmpsign1 = '-1';
+		var warntemp = '-1';
+		var cmpsign2 = '-1';
+		var warnhumi= '-1';
+		if(dvtype == "DHT11"){
+			cmpsign1 = $('#cmpsign1').val();
+			warntemp = $('[name=warntemp]').val().trim();
+			cmpsign2 = $('#cmpsign2').val();
+			warnhumi = $('[name=warnhumi]').val().trim();
+			if(cmpsign1 == '0' && cmpsign2 == '0'){
+				alert("You need to choose neighthor Temparature nor Humidity warning mode");
+				return;
+			}
+			if(cmpsign1 != '0' && warntemp == ''){
+				alert("You need to input temparature warning threshold");
+				return;				
+			}
+			if(cmpsign2 != '0' && warnhumi == ''){
+				alert("You need to input humidity warning threshold");
+				return;				
+			}
+		}
+		
+		$.ajax({
+        url: 'editwarn.php', 
+        dataType: 'text',
+        cache: false,
+        data: {
+			state: state,
+			dvid: dvid,
+			cmpsign1: cmpsign1,
+			warntemp: warntemp,
+			cmpsign2: cmpsign2,
+			warnhumi: warnhumi	
+		},                       
+        method: 'post',
+        success: function(res){ 
+			location.reload();
+        }
+		});		
+	}
+	
+	function cmpsign1chg(){
+		var	cmpsign1 = $('#cmpsign1').val();
+		if(cmpsign1 == '0'){
+			$("#warntempinput").val('');
+			$("#warntempinput").attr("disabled","true");
+		}else{
+			$("#warntempinput").removeAttr("disabled");
+		}
+	}
+	
+	function cmpsign2chg(){
+		var	cmpsign2 = $('#cmpsign2').val();
+		if(cmpsign2 == '0'){
+			$("#warnhumiinput").val('');
+			$("#warnhumiinput").attr("disabled","true");
+		}else{
+			$("#warnhumiinput").removeAttr("disabled");
+		}
 	}
 	
 	$(".signin").submit(function(event){
@@ -586,20 +624,7 @@
 		});
 	});
 	
-	$('warnstate').change(function() {
-		console.log("Hello");
-	})
 	
-	$(function() {
-		$('#warnbtn').off('change').change(function() {
-			var state = $(this).prop('checked')
-			if(state){
-				console.log("On");
-			}else{
-				console.log("Off");
-			}	
-		})
-	})
     </script>
 
 

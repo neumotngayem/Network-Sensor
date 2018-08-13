@@ -3,7 +3,7 @@
 MQ135 mqSensor(A0);//mqsensor
 const int DHTPIN = 2;       //Read data DHT from PIN 2
 const int DHTTYPE = DHT11;  //Chose DHTTYPE
-int ACK_FLG = 0;
+int ACK_FLG = 1;
 int sec = 30000; //Default sec value
 String hostnm;
 
@@ -62,6 +62,8 @@ void loop() {
   if(ACK_FLG == 1){
       float t = dht.readTemperature(); //Read Temperature    
       float h = dht.readHumidity();    //Read Humidity
+      Serial.print("TEMP: ");
+      Serial.print(t);
       Serial.print("ACK YES");
       Serial.print(" HOST ");
       Serial.print(hostnm);

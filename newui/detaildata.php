@@ -40,9 +40,9 @@
 				<td colspan='3' style="text-align:center; "><i class="fa fa-clock-o"></i><b> Update on </b><i> <?php echo($row["timestamp"]); ?></i></td>
 				<tr>
                 <tr>
-                  <td style="text-align:center; "><strong>Device ID: <input class="form-control-plaintext" style="width:60px; display: inherit; font-style: italic;" type="text" name="dvid" value ="<?php echo($row["device_id"]); ?>" readonly/></strong></td>
+                  <td style="text-align:center;"><strong>Device ID: <input class="form-control-plaintext" style="width:60px; display: inherit; font-style: italic;" type="text" name="dvid" value ="<?php echo($row["device_id"]); ?>" readonly/></strong></td>
                   <td></td>
-                 <td style="text-align:center; "><strong>Device Type: <input class="form-control-plaintext" style="width:60px; display: inherit; font-style: italic;" type="text" name="dvtype" value ="<?php echo($row["type"]); ?>" readonly/></strong></td>
+                 <td style="text-align:center;"><strong>Device Type: <input class="form-control-plaintext" style="width:60px; display: inherit; font-style: italic;" type="text" name="dvtype" value ="<?php echo($row["type"]); ?>" readonly/></strong></td>
                 </tr>
 		<?php
 		if($row["type"] == "DHT11" ){

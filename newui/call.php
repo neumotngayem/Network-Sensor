@@ -5,7 +5,7 @@ if(isset($_POST['phone']))
 {	  
 	//Extract the data got
     $phone = $_POST['phone'];
-	$call = "sudo python ../python/call.py $phone";
+	$call = "sudo python ./python/call.py $phone";
 	$return = shell_exec($call);
 	if(strpos($return, '+CIEV: "CALL"') != false ){
 		$return = "okay";

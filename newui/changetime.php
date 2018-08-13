@@ -13,7 +13,7 @@ if(isset($_POST['dvid']) && isset($_POST['chgtime']) )
 	$conn = new mysqli($servername, $username, $password, $dbname);
 	if ($conn->query($sql) === TRUE) {
 		//Send the new refesh time to device
-		$call = "sudo python ../python/changetime.py ".$selected_dvid." ".$selected_val;
+		$call = "sudo python ./python/sent.py $dvid $chgtime";
 		shell_exec($call);
 		echo("Changed");
 	} else{ 

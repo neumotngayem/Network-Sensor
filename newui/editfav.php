@@ -8,23 +8,14 @@
 	if(isset($_POST['dvid']) && isset($_POST['fav'])){
 		$dvid = $_POST['dvid'];
 		$fav = $_POST['fav'];
+		$sql = "";
 		if($fav == '0'){
-			$sql = "UPDATE home SET fav = 1 WHERE device_id='".$dvid."'";
-			if ($conn->query($sql) === TRUE) {
-				echo("Success");
-			}else{
-				echo("Error");
-			}
+			$sql = "UPDATE home SET fav = 1 WHERE device_id='$dvid'";
 		}else{
-			$sql = "UPDATE home SET fav = 0 WHERE device_id='".$dvid."'";
-			if ($conn->query($sql) === TRUE) {
-				echo("Success");
-			}else{
-				echo("Error");
-			}
+			$sql = "UPDATE home SET fav = 0 WHERE device_id='$dvid'";
 		}
-	}else{
-		echo("Error");
+		$conn->query($sql);
+		$conn->close();
 	}
-	$conn->close();
+	
 ?>
