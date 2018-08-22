@@ -45,6 +45,7 @@
         </li>
 		
 		<?php
+		// Print out Room specification on navigation
 		$servername = "localhost";
 		$username = "root";
 		$password = "admin123";
@@ -52,6 +53,7 @@
 		// Create connection
 		$conn = new mysqli($servername, $username, $password, $dbname);
 		$sql = "SELECT rm_name, rm_id FROM room ORDER BY posi";
+		// Query SQL
 		$result = $conn->query($sql);
 		if ($result->num_rows > 0) {
 			while($row = $result->fetch_assoc()) {
@@ -91,7 +93,6 @@
         </li>
       </ul>
       <!-- end zoom -->
-      <!-- end zoom -->
 
       <ul class="navbar-nav ml-auto">	
 		<li class="nav-item">
@@ -104,31 +105,35 @@
             <i class="fa fa-fw fa-sign-out-alt"></i>Logout</a>
         </li>
       </ul>
+	  
     </div>
   </nav>
 
 <?php
+	// Check whether login or not, If not login redirect to login page
 	session_start(); 
 	if(is_null($_SESSION['user_id'])){
 		echo '<script type="text/javascript"> window.location = "./login.php"</script>';
 	}
 ?>
 
-  <div class="content-wrapper">
+	<div class="content-wrapper">
     <div class="container">
-       <div class="card mb-3">
+		<div class="card mb-3">
         <div class="card-body">
-          <div class="table-responsive">
-            <table id="myTable2" class="table tablesorter"  width="100%" cellspacing="1">
+			<div class="table-responsive">
+			<table id="myTable2" class="table tablesorter"  width="100%" cellspacing="1">
 	<script>
+		// Create object Room
 		function Room(rmid, rmname){
 			this.rmid = rmid;
 			this.rmname = rmname;
 		}
+		// Initialize the room list
 		sessionStorage.setItem("listRoom","");
 	</script>
          
-<?php
+	<?php
 	$servername = "localhost";
 	$username = "root";
 	$password = "admin123";
@@ -136,133 +141,129 @@
 	// Create connection
 	$conn = new mysqli($servername, $username, $password, $dbname);
 	$sql = "SELECT rm_id, rm_name FROM room ORDER BY posi";
+	// Query SQL
 	$result = $conn->query($sql);
 	if ($result->num_rows > 0) {
-		// output data of each row
+		// Output data of each row
 		$i = 1;
 	    while($row = $result->fetch_assoc()) {
-?>
-              
+	?>  
             <tr>
               <td>
                 <div class="input-group mb-3">
                     <input required style="border-color: #0066FF; cursor:move;" class="indrag form-control rmname" type="text" id="valueid-<?php echo($i) ?>" style="margin-left:20px; margin-top: 20px" type="text" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)" value="<?php echo($row["rm_name"]) ?>" aria-describedby="basic-addon1">
-					 <input id ='valuermid-<?php echo($i) ?>' class="rmid" name='rmid' type="text" value="<?php echo($row["rm_id"]) ?>" hidden/>
-                     <div class="input-group-prepend">
-					 <button id='btndelete-<?php echo($i) ?>' style="border-color: black" class="btn bg-warning" data-toggle="modal" data-target="#kbidelete" onclick="setRow(<?php echo($i) ?>)"><i class="fa fa-trash" ></i></button>
-				  </div>
+					<input id ='valuermid-<?php echo($i) ?>' class="rmid" name='rmid' type="text" value="<?php echo($row["rm_id"]) ?>" hidden/>
+                    <div class="input-group-prepend">
+						<button id='btndelete-<?php echo($i) ?>' style="border-color: black" class="btn bg-warning" data-toggle="modal" data-target="#kbidelete" onclick="setRow(<?php echo($i) ?>)"><i class="fa fa-trash" ></i></button>
+					</div>
                 </div> 
               </td>
             </tr>
 			
 			<script>
+				// Push acquire data on room list also
 				var rm = new Room(<?php echo($row["rm_id"]) ?>,"<?php echo($row["rm_name"]) ?>");
+				// If existed in session already have list room, add room on existed room list, push it back to session
 				if (sessionStorage.listRoom){
 					var list = JSON.parse(sessionStorage.listRoom);
 					list.push(rm);
 					sessionStorage.setItem("listRoom",JSON.stringify(list));
-				}else{
+				}else{ // Else create the new list, add a room on this and push it back to session
 					var list = [];
 					list.push(rm);
 					sessionStorage.setItem("listRoom",JSON.stringify(list));
 				}
 			</script>
 
-<?php
+	<?php
 			$i+=1;
 		}
 	}else{ //If no room to show
-?>
-	    <strong>Sorry! </strong>You don't have any room in here :(</p>
-<?php
-	}	
-?> 
-        </table>
-      </div>
-  </div>
-  <div class=" card-footer small text-muted"><button type="button" class="btn btn-success btn-lg btn-block" onclick="saveRm()">Click to Save</button></div>
+	?>
+		<p><strong>Sorry! </strong>You don't have any room in here <i class="far fa-frown"></i></p>
+	<?php
+	}
+	// Close connection
+	$conn->close();	
+	?> 
+			</table>
+			</div>
+		</div>
+			<div class=" card-footer small text-muted"><button type="button" class="btn btn-success btn-lg btn-block" onclick="saveRm()">Click to Save</button></div>
+		</div>
+		</br></br>
+		<form action="addroom.php" method="post" class="addRoom">
+			<div class="input-group mb-3">				
+				<input name ='rmadd' style="border-color: #0066FF" type="text" class="form-control" placeholder="Enter room name to add ..." aria-label="" aria-describedby="basic-addon1">
+				<div class="input-group-prepend">
+					<button type='submit'  style="border-color: black" class="btn bg-warning" type="button"><i class="fa fa-plus " id="" onclick=""></i></button>
+				</div>
+			</div>
+		</form>
     </div>
-	
-	<div id="server-results"><!-- For server results --></div>
-   <br></br>
-   <form action="addroom.php" method="post" class="addRoom">
-    <div class="input-group mb-3">
-					
-                    <input name ='rmadd' style="border-color: #0066FF" type="text" class="form-control" placeholder="Enter room name to add ..." aria-label="" aria-describedby="basic-addon1">
-                     <div class="input-group-prepend">
-                     <button type='submit'  style="border-color: black" class="btn bg-warning" type="button"><i class="fa fa-plus " id="" onclick=""></i></button>
-                  </div>
-                </div>
-				</form>
-    </div>
-	<div id="server-results2"><!-- For server results --></div>	
+	</div>
+</body>
 
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fa fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" onclick="logout()">Logout</button>
+      </div>
+    </div>
   </div>
 </div>
-   <!-- /.container-fluid-->
-    <!-- /.content-wrapper-->
-   
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fa fa-angle-up"></i>
-    </a>
-    <!-- Logout Modal-->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <button class="btn btn-primary" onclick="logout()">Logout</button>
-          </div>
-        </div>
-      </div>
-    </div>
-	
-	<!-- Delete Modal -->
-	<div class="modal fade" id="kbidelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div  class="modal-header">
-            <h3  class="modal-title" id="exampleModalLabel">When delete where all of your devices will come ?</h3>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">
-          
-          <div class="form-group">
-            <select  class="form-control" id="rmmoveslt" name="rmmoveslt">
-                    <option value="deleteall" selected>Remove all devices belong to this room</option>
-					<script>
-						
-							var list = JSON.parse(sessionStorage.getItem("listRoom"));
-							for(i = 0; i < list.length;i++){
-									document.write("<option value='"+list[i].rmid+"'> Move all devices to "+list[i].rmname+"</option>");
-								}
-					</script>
-						
-            </select>
-          </div>   
-          <button class="btn btn-primary btn-block" onclick="deleteRm()" >Delete</button>
 
-          </div>      
-        </div>
+<!-- Delete Modal -->
+<div class="modal fade" id="kbidelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLabel">When delete where all of your devices will come ?</h3>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
       </div>
+      <div class="modal-body">   
+      <div class="form-group">
+        <select  class="form-control" id="rmmoveslt" name="rmmoveslt">
+                <option value="deleteall" selected>Remove all devices belong to this room</option>
+				<script>
+						// Print out all room list from session
+						var list = JSON.parse(sessionStorage.getItem("listRoom"));
+						for(i = 0; i < list.length;i++){
+								document.write("<option value='"+list[i].rmid+"'> Move all devices to "+list[i].rmname+"</option>");
+						}
+				</script>			
+        </select>
+      </div>   
+		<button class="btn btn-primary btn-block" onclick="deleteRm()" >Delete</button>
+      </div>      
     </div>
+  </div>
+</div>
 
 <script>
-
+	// Set row id to session method
 	function setRow(rownum){
 		var row = rownum-1;
 		sessionStorage.setItem("row",row);
 		var size = document.getElementById("rmmoveslt").length;
+		// Not show current row on display dropbox
 		for(i = 1; i < size;i++){
 			if(rownum == i){
 				document.getElementById("rmmoveslt").options[i].hidden="true";
@@ -272,52 +273,49 @@
 		}
 	}
 	
-	if (sessionStorage.sysRoomMess) {
-		document.getElementById("server-results").innerHTML = sessionStorage.sysRoomMess
-	} 
-	if (sessionStorage.sysRoomMess2) {
-		document.getElementById("server-results2").innerHTML = sessionStorage.sysRoomMess
-	} 
-	
+	// For drag and drop method
 	function allowDrop(ev) {
 	ev.preventDefault();
 	}
 	
+	// For drag and drop method
 	function drag(ev) {
 	ev.dataTransfer.setData("text", ev.target.id);
 	}
 	
+	// Drag and drop method
 	function drop(ev) {
-	ev.preventDefault();
-	var idData = ev.dataTransfer.getData("text");
-	var indexBefore = idData.substring(8);
-	var idRmid = 'valuermid-'+indexBefore
-	var idBtnDelete = '#btndelete-'+indexBefore
-	var data = document.getElementById(idData).value;
-	var dataRmid = document.getElementById(idRmid).value;
-	var attrBtnDelete = $(idBtnDelete).attr("onclick");
-	var dataBack = ev.target.value;
-	var indexAfter = ev.target.id.substring(8);
-	var idRmidBack = 'valuermid-'+indexAfter;
-	var dataRmidBack = document.getElementById(idRmidBack).value;
-	var idBtnDeleteBack = '#btndelete-'+indexAfter
-	var attrBtnDeleteBack = $(idBtnDeleteBack).attr("onclick");
-	document.getElementById(idData).value = dataBack;
-	document.getElementById(idRmid).value = dataRmidBack;
-	$(idBtnDelete).attr("onclick",attrBtnDeleteBack);
-	document.getElementById(ev.target.id).value = data;
-	document.getElementById(idRmidBack).value = dataRmid;
-	$(idBtnDeleteBack).attr("onclick",attrBtnDelete);
+		// All the source below is to swap value, room id and onclick attribute of drag and drop objects 
+		ev.preventDefault();
+		var idData = ev.dataTransfer.getData("text");
+		var indexBefore = idData.substring(8);
+		var idRmid = 'valuermid-'+indexBefore
+		var idBtnDelete = '#btndelete-'+indexBefore
+		var data = document.getElementById(idData).value;
+		var dataRmid = document.getElementById(idRmid).value;
+		var attrBtnDelete = $(idBtnDelete).attr("onclick");
+		var dataBack = ev.target.value;
+		var indexAfter = ev.target.id.substring(8);
+		var idRmidBack = 'valuermid-'+indexAfter;
+		var dataRmidBack = document.getElementById(idRmidBack).value;
+		var idBtnDeleteBack = '#btndelete-'+indexAfter
+		var attrBtnDeleteBack = $(idBtnDeleteBack).attr("onclick");
+		document.getElementById(idData).value = dataBack;
+		document.getElementById(idRmid).value = dataRmidBack;
+		$(idBtnDelete).attr("onclick",attrBtnDeleteBack);
+		document.getElementById(ev.target.id).value = data;
+		document.getElementById(idRmidBack).value = dataRmid;
+		$(idBtnDeleteBack).attr("onclick",attrBtnDelete);
 	}
 
-	//Script for save the sort room list
+	//Save the sort room list method
 	function saveRm(){
+		//Get all room name and room id
 	    var rmnames = document.getElementsByClassName("rmname");
         var rmids = document.getElementsByClassName("rmid");
-	
 		var data = [];
 		var data2 = [];
-		
+		// Check if enter room name is blank
 		var i;
 		for (i = 0; i < rmnames.length; i++) {
 			if(rmnames[i].value.trim() == ''){
@@ -325,93 +323,96 @@
 				location.reload();
 				break;
 			}
+			// Push data on array
 			data.push(rmnames[i].value);
 			data2.push(rmids[i].value);
 		}
 		
-		//Push to update.php
+		// Using AJAX to request to server
         $.ajax({
-                url: 'updateroom.php', 
-                dataType: 'text',
-                cache: false,
-                data: {
-		data:  data.join('-'),
-		data2: data2.join('-'),
-		},                       
-        method: 'post',
-		success: function(response){ 
-				sessionStorage.sysRoomMess = response;
-                location.reload();
-            }
+            url: 'updateroom.php', 
+            dataType: 'text',
+            cache: false,
+            data: {
+				// Join data to 1 string
+				data:  data.join('-'),
+				data2: data2.join('-')
+			},                       
+			method: 'post',
+			success: function(response){ 
+					location.reload();
+				}
         });
 	}
 	
+	// Delete room method
 	function deleteRm(){
+		// Prepare data
 		var rownum = sessionStorage.row;
 		var rmid = document.getElementsByClassName("rmid")[rownum].defaultValue;
 		var	rmidmove = $('[name=rmmoveslt]').val();
-		console.log(rmidmove);
 		
+		// Using AJAX to request to server
 		$.ajax({
 			url: 'deleteroom.php', 
 			dataType: 'text',
 			cache: false,
 			data: {
 				rmid: rmid,
-				rmidmove: rmidmove,
+				rmidmove: rmidmove
 			},                       
 			method: 'post',
 			success: function(res){ 
-				sessionStorage.sysRoomMess = res;
 				location.reload();
 			}
 		});
 	}
-  
+	
+	// Add room method
 	$(".addRoom").submit(function(event){
-    event.preventDefault(); //prevent default action 
-    var post_url = $(this).attr("action"); //get form action url
-    var request_method = $(this).attr("method"); //get form GET/POST method
-    var form_data = $(this).serialize(); //Encode form elements for submission
+		// Get the URL, request method, form data from add room form 
+		event.preventDefault(); //prevent default action 
+		var post_url = $(this).attr("action"); //get form action url
+		var request_method = $(this).attr("method"); //get form GET/POST method
+		var form_data = $(this).serialize(); //Encode form elements for submission
+		// Using AJAX to request to server
 		$.ajax({
 			url : post_url,
 			type: request_method,
 			data : form_data
 		}).done(function(response){
-			sessionStorage.sysRoomMess2 = response
 			location.reload();
 		});
 	});
 	
+	// Logout method
 	function logout(){
+		// Using AJAX to request to server
 		$.ajax({
-		url: 'logout.php', 
-		dataType: 'text',
-		cache: false,
-		data: {
-		},                       
-		method: 'post',
-		success: function(res){ 
-			location.reload();
-		}
+			url: 'logout.php', 
+			dataType: 'text',
+			cache: false,
+			data: {
+			},                       
+			method: 'post',
+			success: function(res){ 
+				location.reload();
+			}
 		});
 	}
-
 </script>
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-    <!-- Page level plugin JavaScript-->
-    <script src="vendor/datatables/jquery.dataTables.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin.min.js"></script>
-    <!-- Custom scripts for this page-->
-    <script src="js/sb-admin-datatables.min.js"></script>
-  </div>
-</body>
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<!-- Page level plugin JavaScript-->
+<script src="vendor/datatables/jquery.dataTables.js"></script>
+<script src="vendor/datatables/dataTables.bootstrap4.js"></script>
+<!-- Custom scripts for all pages-->
+<script src="js/sb-admin.min.js"></script>
+<!-- Custom scripts for this page-->
+<script src="js/sb-admin-datatables.min.js"></script>
 
 </html>
 

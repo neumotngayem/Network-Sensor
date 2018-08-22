@@ -89,7 +89,7 @@ void loop() {
       if(!isnan(h) && !isnan(t) && analogRead(A0) != 0){
         Serial.print(" CO2 ");
         Serial.print(mqSensor.getCalibratedCO2(t,h));
-        Serial.print(" CO0 ");
+        Serial.print(" COO ");
         Serial.print(mqSensor.getCalibratedCO(t,h));
         Serial.print(" ETHANOL ");
         Serial.print(mqSensor.getCalibratedEthanol(t,h));

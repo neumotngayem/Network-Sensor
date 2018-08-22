@@ -238,9 +238,9 @@
                 </tr>
 				<tr>
 					<td colspan="3">
-						<span style="color: red;">* </span>Warning of DHT11 will take by SMS
+						<span style="color: red;">* Warning of DHT11 will take by SMS</span>
 						</br>
-						<span style="color: red;">* </span>Data of DHT11 sensor will store in 5 days
+						<span style="color: red;">* Data of DHT11 sensor will store in 5 days</span>
 					</td>
 				</tr>
 		<?php
@@ -269,9 +269,9 @@
                 </tr>
 				<tr>
 					<td colspan="3">
-						<span style="color: red;">* </span>Warning of MC52 will take by phone call
+						<span style="color: red;">* Warning of MC52 will take by phone call and SMS</span>
 						</br>
-						<span style="color: red;">* </span>Data of MC52 sensor will store only 24h
+						<span style="color: red;">* Data of MC52 sensor will store only 24h</span>
 					</td>
 				</tr>
 		<?php		
@@ -304,9 +304,9 @@
                 </tr> 
 				<tr>
 					<td colspan="3">
-						<span style="color: red;">* </span>Warning of MQ135 will take by SMS
+						<span style="color: red;">* Warning of MQ135 will take by SMS</span>
 						</br>
-						<span style="color: red;">* </span>Data of MQ135 sensor will store in 5 days
+						<span style="color: red;">* Data of MQ135 sensor will store in 5 days</span>
 					</td>
 				</tr>
 		<?php
@@ -518,8 +518,9 @@
 		
 	function exportData(){
 		var dvid = $('[name=dvid]').val();
+		var dvtype = $('[name=dvtype]').val();
 		var dayopt = $('#dayoption').val();
-		window.location.href = 'exportdata.php?dvid='+dvid+"&dayopt="+dayopt;
+		window.location.href = 'exportdata.php?dvid='+dvid+'&dvtype='+dvtype+'&dayopt='+dayopt;
 	}
 		
 	function editFav(dvid, fav){
@@ -601,6 +602,11 @@
 		}else{
 			$("#warnhumiinput").removeAttr("disabled");
 		}
+	}
+	
+	function exportJson(){
+		var dvid = $('[name=dvid]').val();
+		window.location.href = 'exportjson.php?dvid='+dvid;
 	}
 	
 	$(".signin").submit(function(event){

@@ -3,11 +3,11 @@ $servername = "localhost";
 $username = "root";
 $password = "admin123";
 $dbname = "iot";
+// Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 //If it have enough data for processing
-if(isset($_POST['data']) && isset($_POST['data2']) )
-{
-    //Extract the data got
+if(isset($_POST['data']) && isset($_POST['data2']) ){
+    //Extract the data from request
     $data = explode('-', $_POST['data']);
     $data2 = explode('-', $_POST['data2']);
     
@@ -15,15 +15,9 @@ if(isset($_POST['data']) && isset($_POST['data2']) )
     $numbers = 3;
     for($i = 0; $i < count($data); $i++){
         $sql = 'UPDATE room SET posi = '.$i.', rm_name= "'.$data[$i].'" WHERE rm_id ='.$data2[$i];
-		if ($conn->query($sql) === TRUE) {
-			continue;
-		}else{
-			die('Error');
-		}
+		$conn->query($sql);
     }
-	echo('Your room list has been saved');
-} else{ 
-    echo("Opps Error");
+	// Close connection
+	$conn->close();	
 }
-$conn->close();	
 ?>

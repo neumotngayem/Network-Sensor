@@ -31,7 +31,6 @@
     </button>
     <!-- end button -->
 
-
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
 		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
@@ -42,6 +41,7 @@
         </li>
 		
 		<?php
+		// Print out Room specification on navigation
 		$servername = "localhost";
 		$username = "root";
 		$password = "admin123";
@@ -49,6 +49,7 @@
 		// Create connection
 		$conn = new mysqli($servername, $username, $password, $dbname);
 		$sql = "SELECT rm_name, rm_id FROM room ORDER BY posi";
+		// Query SQL
 		$result = $conn->query($sql);
 		if ($result->num_rows > 0) {
 			while($row = $result->fetch_assoc()) {
@@ -62,6 +63,7 @@
 		<?php
 			}
 		}
+		// Close connection
 		$conn->close();
 		?>
 
@@ -72,7 +74,7 @@
           </a>
         </li>
 
-         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Room Manager">
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Room Manager">
           <a class="nav-link" href="room.php">
             <i class="fab fa-windows"></i>
             <span class="nav-link-text"> Room Manager</span>
@@ -96,82 +98,81 @@
   <div class="container">
     <div class="card card-login mx-auto mt-5">
       <div class="card-header" style="text-align:center;"><i class="fa fa-lock"></i><strong> Login</strong></div>
-      <div class="card-body">
-        <form action="signin.php" method="post" class='signin'>
-          <div class="form-group">
-            <label for="exampleInputUsername"><strong>Username</strong></label>
-            <input readonly name='username' class="form-control" id="exampleInputUsername" type="text" aria-describedby="emailHelp" value="admin">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputPassword"><strong>Password</strong></label>
-            <input required name='password' class="form-control" id="exampleInputPassword" type="password" placeholder="Password">
-          </div>
-          </div>
-          <button type='submit' class="btn btn-primary btn-block" >Sign In</button>
-        </form>
+		<div class="card-body">
+			<form action="signin.php" method="post" class='signin'>
+			  <div class="form-group">
+				<label for="exampleInputUsername"><strong>Username</strong></label>
+				<input readonly name='username' class="form-control" id="exampleInputUsername" type="text" aria-describedby="emailHelp" value="admin">
+			  </div>
+			  <div class="form-group">
+				<label for="exampleInputPassword"><strong>Password</strong></label>
+				<input required name='password' class="form-control" id="exampleInputPassword" type="password" placeholder="Password">
+			  </div>
+			  <button type='submit' class="btn btn-primary btn-block" >Sign In</button>
+			</form>
+		</div>
 		<br>
         <div class="text-center">
           <a style="cursor: pointer; color: #007bff;" class="d-block small" onclick="captcha()" data-toggle="modal" data-target="#kbiresetpass">Reset Admin's Password</a>
         </div>
 		<br>
-		<div id="server-results"><!-- For server results --></div>
-      </div>
+		<div style="text-align: center" id="server-results"><!-- For server results --></div>
     </div>
   </div>
-</div>
+  </div>
  
 </body>
   
-    <!-- /.container-fluid-->
-    <!-- /.content-wrapper-->
-   
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fa fa-angle-up"></i>
-    </a>
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fa fa-angle-up"></i>
+</a>
 	
-	<!--Enter Capcha modal-->
-	<div class="modal fade" id="kbiresetpass" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">  
-          <div class="modal-body">
-			<div class="form-group">
-				<h5>Enter a captcha sent to your phone</h5>
-				<input class="form-control" type="text" name="incaptcha">
-				<br>
-				<button id="nextsucss" class="btn btn-primary btn-block" onclick="checkcaptcha()" >Check</button>
-				<br>
-				<div id="check-results"></div>
-			</div>          
-          </div>          
-        </div>
-      </div>
+<!--Enter Capcha pop-up-->
+<div class="modal fade" id="kbiresetpass" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">  
+      <div class="modal-body">
+		<div class="form-group">
+			<h5>Enter a captcha sent to your phone</h5>
+			<input class="form-control" type="text" name="incaptcha">
+			<br>
+			<button id="nextsucss" class="btn btn-primary btn-block" onclick="checkcaptcha()" >Check</button>
+			<br>
+			<div style="text-align: center" id="check-results"></div>
+		</div>          
+      </div>          
     </div>
-    <!-- end -->
+  </div>
+</div>
+
 
 <script>
+  // Sign in method
   $(".signin").submit(function(event){
-	  
+	// Get the URL, request method, form data from sign in form 
     event.preventDefault(); //prevent default action 
     var post_url = $(this).attr("action"); //get form action url
     var request_method = $(this).attr("method"); //get form GET/POST method
     var form_data = $(this).serialize(); //Encode form elements for submission
-    
+    // Using AJAX to request to server
     $.ajax({
         url : post_url,
         type: request_method,
         data : form_data
-    }).done(function(response){ //
-	
-	if(response === 'login'){
+    }).done(function(response){
+	if(response == 'login'){
+		//If login sucess, go to device.php
 		window.location = './device.php';
-	}else{
+	}else{ // Else will show fail status, on div server-results	
 		$("#server-results").html(response);
 	}
     });
-  });
+  })
   
+  // Send captcha method
   function captcha(){
+	// Using AJAX to request to server
 	$.ajax({
         url: 'sentcaptcha.php', 
         dataType: 'text',
@@ -182,9 +183,12 @@
         method: 'post'
     }); 
   }
-
+  
+  // Check enter captcha method
   function checkcaptcha(){
+	// Prepare data
 	var incaptcha = $('[name=incaptcha]').val();
+	// Using AJAX to request to server
 	$.ajax({
         url: 'checkcaptcha.php', 
         dataType: 'text',
@@ -195,32 +199,29 @@
 		},  		
         method: 'post',
         success: function(res){
+			// If reset status is okay
 			if(res == 'resetokay'){
 				alert("Your admin's password has been reset to default password successfully !!!");
 				location.reload();
-			}else{
+			}else{ // Else will show fail status, on div check-results	
 				$("#check-results").html(res);
 			}
         }
     }); 
   }
 </script>
-   
-
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-    <!-- Page level plugin JavaScript-->
-    <script src="vendor/datatables/jquery.dataTables.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin.min.js"></script>
-    <!-- Custom scripts for this page-->
-    <script src="js/sb-admin-datatables.min.js"></script>
-  </div>
-</body>
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<!-- Page level plugin JavaScript-->
+<script src="vendor/datatables/jquery.dataTables.js"></script>
+<script src="vendor/datatables/dataTables.bootstrap4.js"></script>
+<!-- Custom scripts for all pages-->
+<script src="js/sb-admin.min.js"></script>
+<!-- Custom scripts for this page-->
+<script src="js/sb-admin-datatables.min.js"></script>
 
 </html>
 

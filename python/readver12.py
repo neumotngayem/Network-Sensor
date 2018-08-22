@@ -42,8 +42,8 @@ try:
                         sql = "INSERT INTO home (device_id, type, open, sec) VALUES ('%s', '%s', %s, %s) ON DUPLICATE KEY UPDATE open = %s, timestamp = '%s'" % (dvid,typedv,dopen,30,dopen,str(st))
                     elif "MQ135" in data:
                         typedv = "MQ135"
-                        co2 = data[(data.find("CO2")+4):(data.find("CO0")-1)]
-                        co = data[(data.find("CO0")+4):(data.find("ETHANOL")-1)]
+                        co2 = data[(data.find("CO2")+4):(data.find("COO")-1)]
+                        co = data[(data.find("COO")+4):(data.find("ETHANOL")-1)]
                         ethanol = data[(data.find("ETHANOL")+8):(data.find("TOLUENE")-1)]
                         toluene = data[(data.find("TOLUENE")+8):(data.find("ACETONE")-1)]
                         acetone = data[(data.find("ACETONE")+8):(data.find("ANALOG")-1)]

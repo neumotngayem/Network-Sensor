@@ -18,8 +18,8 @@
 				
 				<tr>
                  <td style="text-align: center;"><i class="fa fa-star star<?php echo($row["device_id"]) ?>" style="cursor: pointer; margin-top: 12px;" onclick="myFunction('star<?php echo($row["device_id"]) ?>')"></i><input class="star<?php echo($row["device_id"]) ?>" type="text" name="star" hidden value="0"/></td>
-                 <td style="text-align: center;"><strong>Device ID:</strong><input class="form-control-plaintext" style="width:60px; display: inherit;" type="text" name="dvid" value ="<?php echo($row["device_id"]) ?>" readonly /></td>
-                 <td style="text-align: center;"><strong>Device Type:</strong><input class="form-control-plaintext" style="width:60px; display: inherit;" type="text" name="dvtype" value ="<?php echo($row["type"]) ?>" readonly /></td>
+                 <td style="text-align: center;"><strong>Device ID: </strong><input class="form-control-plaintext" style="width:60px; display: inherit;" type="text" name="dvid" value ="<?php echo($row["device_id"]) ?>" readonly /></td>
+                 <td style="text-align: center;"><strong>Device Type: </strong><input class="form-control-plaintext" style="width:60px; display: inherit;" type="text" name="dvtype" value ="<?php echo($row["type"]) ?>" readonly /></td>
                   <td style="text-align:center; "><button class="btn bg-warning btn-block" data-toggle="modal" data-target="#kbiadd" onclick="setRow('<?php echo($i) ?>')"><strong>Add</strong></button>
                 </tr>
 				
@@ -48,7 +48,7 @@
 		}
 	}else{ //If no device to show
 ?>
-	   <p><strong>Sorry! </strong>You don't have any device in here :(</p>
+	   <p><strong>Sorry! </strong>You don't have any device in here <i class="far fa-frown"></i></p>
 <?php
 	}
 	$conn->close();

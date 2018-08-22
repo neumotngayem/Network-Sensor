@@ -107,8 +107,10 @@
 		}else if($row["type"] == "MQ135" ){
 	?>
 				<tr>
-                    <td style="text-align: center;" colspan="3"  ><i class="fab fa-envira" id="" style="font-size: 25px;"></i><strong> Status:</strong> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="" value ="<?php echo ($row["analog"] >= 100) ? "Bad" : "Okay";?>" readonly/></td>
-                </tr>              
+					<td></td>
+                    <td style="text-align: center;" ><i class="fab fa-envira" id="" style="font-size: 25px;"></i><strong> Status:</strong> <input class="form-control-plaintext" style="width:60px; display: inherit;  font-style: italic;" type="text" name="" value ="<?php echo ($row["analog"] >= 100) ? "Bad" : "Okay";?>" readonly/></td>
+					<td><button class="btn btn-block bg-success " onclick="exportJson()" ><strong>Export JSON</strong></button></td>
+				</tr>              
                 <tr>
                     <td style="text-align:center; "><strong>CO: <input class="form-control-plaintext" style="width:70px; display: inherit; font-style: italic;" type="text"  value ="<?php echo($row["co"]); ?> PPM" readonly/></strong></td>
                     <td style="text-align:center; "><strong>CO2: <input class="form-control-plaintext" style="width:100px; display: inherit; font-style: italic;" type="text"  value ="<?php echo($row["co2"]); ?> PPM" readonly/></strong></td>

@@ -128,23 +128,8 @@
 	    <div class="card mb-3">
         <div class="card-header"><b>WX-Net Host Config</b></div>
         <div class="card-body">
-		
-		<div class="form-inline">
-		<div class="form-group">
-		<select class="form-control" id="">
-			<option selected>SSID</option>
-			<option value="1">One</option>
-			<option value="2">Two</option>
-			<option value="3">Three</option>
-		</select>
-		</div>
-		<div class="form-group">
-		<input placeholder="Password" type="text" class="form-control"></input>
-		</div>
-			<div class="btn-group ">
-				<button class="btn btn-success" style="color: black" ><i class="fa fa-wifi" > Conect</i></button>
-				<button class="btn bg-danger" ><strong>Status: </strong><i> Disconected</i></button>
-			</div> 		
+			
+		<div id="wifi" class="form-inline">
 		</div>
 		
 		<p>
@@ -169,13 +154,13 @@
 				<button style="color: black; font-weight: bold;" type="button" class="btn btn-danger" onclick="smstest()">SMS Test</button>
 				<button style="color: black; font-weight: bold;" type="button" class="btn btn-warning" onclick="balance()">Balance</button>
 				<button style="color: black; font-weight: bold;" type="button" class="btn btn-secondary" onclick="addmoney()">Add Money</button>
-				<span id='btngsm' class="btn btn-success" style="cursor: default; color: black" ><strong>Test status: </strong><i id="gsmtest">Not yet</i></span>
+				<span id='btngsm' class="btn btn-danger" style="cursor: default; color: black" ><strong>Test status: </strong><i id="gsmtest">Not yet</i></span>
 			</div>
 		<?php
 				}else{
 			$_SESSION['regisphone'] = NULL;
 		?>
-			<div class="btn-group ">
+			<div class="btn-group table-responsive">
 				<button class="btn bg-warning" data-toggle="modal" data-target="#kbichangephone1" ><i class="fas fa-mobile-alt"> Add</i></button>
 				<span class="btn btn-danger" style="cursor: default; color: black" >You haven't had registered phone number yet</span>
 			</div>
@@ -188,7 +173,7 @@
 	
 	<button style="margin-bottom: 15px;" class="btn bg-warning" data-toggle="modal" data-target="#kbichangepass" ><i class="fa fa-key"> Change Admin's Password</i></button>
 	</br>
-	
+	<span style="color: red">* For security reason, it is important that you must register your phone number at your first time login<span>
 	
 	</div>
 	<div class=" card-footer small text-muted"></div>
@@ -238,7 +223,6 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">     
           <div class="modal-body">
-            <form>
           <div class="form-group">
             <h5>What is your device name ?</h5>
             <input class="form-control" type="text" name="dvname">
@@ -264,8 +248,6 @@
 			</select>	
           </div>
           <button class="btn btn-primary btn-block" onclick="addRoom()">Add</button>
-        </form>
-        
           </div>
           
         </div>
@@ -377,7 +359,7 @@
 	var name = $('[name=dvname]').val().trim();
 	var room = $('[name=room]').val();
 	if(name == ''){
-		alert('You have to enter your Device name');
+		alert('You have to enter your device name');
 		return;
 	}
 	
@@ -590,7 +572,36 @@
   <?php
 	}
   ?>
-
+  function connectwifi(){
+	var ssid = $('#ssidselect').val();
+	var pwssid = $('[name=pwssid]').val();
+	$("#btwifi").removeClass("btn-danger");
+	$("#btwifi").addClass("btn-warning");
+	$("#wifistatus").html("System will reboot later !!! Try refreshing your browser");	
+	$.ajax({
+       url: 'connectwifi.php', 
+       dataType: 'text',
+       cache: false,
+       data: {
+		   ssid: ssid,
+		   pwssid: pwssid
+	   },                       
+       method: 'post',
+       success: function(res){
+       }
+	});	
+  }
+  
+  function disconnectwifi(){
+	   $("#ssidselect").removeAttr("disabled");
+	   $("#pwssidenter").removeAttr("disabled");
+	   $("#btnconnect").removeClass("btn-danger");
+	   $("#btnconnect").addClass("btn-success");
+	   $("#btnconnect").attr("onclick","connectwifi()");
+	   $("#btnconnectstatus").html("Connect");
+	   $("#pwssidenter").val('');
+	  
+  }
 
   function logout(){
 	$.ajax({
@@ -607,8 +618,7 @@
   }
   
   $('#show').load('acklistdata.php');
-  $('#devicestatus').load('devicestatus.php');
-  
+  $('#wifi').load('wifidata.php');
   
   
   $(document).ready(function() {

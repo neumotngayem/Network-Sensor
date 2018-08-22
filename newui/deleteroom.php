@@ -3,25 +3,25 @@ $servername = "localhost";
 $username = "root";
 $password = "admin123";
 $dbname = "iot";
+// Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
-//If it have enough data for processing
+// If it have enough data for processing
 if(isset($_POST['rmid']) && isset($_POST['rmidmove']) ){
+	// Extract data from request
 	$rmid = $_POST['rmid']; 
 	$rmidmove = $_POST['rmidmove'];
-	$sql = "DELETE FROM room WHERE rm_id=".$rmid;
+	$sql = "DELETE FROM room WHERE rm_id = $rmid";
 	$sql2 = "";
+	// If select delete all
 	if($rmidmove == "deleteall"){
-		$sql2 = "DELETE FROM home WHERE loca_id=".$rmid;	
-	}else{
-		$sql2 = "UPDATE home SET loca_id=$rmidmove WHERE loca_id=".$rmid;	
+		$sql2 = "UPDATE home SET loca_id = 0 WHERE loca_id = $rmid";	
+	}else{ // Else make all device belong to this room change to selected room
+		$sql2 = "UPDATE home SET loca_id = $rmidmove WHERE loca_id= $rmid";	
 	}
-	if (($conn->query($sql) === TRUE) && ($conn->query($sql2) === TRUE)) {
-	    echo "Deleted";	
-	} else {
-		echo("Opps Error");
-	}
-}else{
-	echo("Opps Error");
+	// Query SQL
+	$conn->query($sql);
+	$conn->query($sql2);
+	// Close connection
+	$conn->close();
 }
-$conn->close();
 ?>

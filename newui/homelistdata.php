@@ -122,7 +122,9 @@
 		$i+=1;
 		}
 	}else{
-		echo("There is no device in here :(");
+?>
+		<p><strong>Sorry! </strong>You don't have any device in here <i class="far fa-frown"></i></p>
+<?php
 	}
 	$conn->close();
 ?>

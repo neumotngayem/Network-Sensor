@@ -62,16 +62,14 @@ void loop() {
   if(ACK_FLG == 1){
       float t = dht.readTemperature(); //Read Temperature    
       float h = dht.readHumidity();    //Read Humidity
-      Serial.print("TEMP: ");
-      Serial.print(t);
       Serial.print("ACK YES");
       Serial.print(" HOST ");
-      Serial.print(hostnm);
+      Serial.print("RS1");
       Serial.print(" DEVICE DV3");
       Serial.print(" TYPE MQ135");
       Serial.print(" CO2 ");
       Serial.print(mqSensor.getCalibratedCO2(t,h));
-      Serial.print(" CO0 ");
+      Serial.print(" COO ");
       Serial.print(mqSensor.getCalibratedCO(t,h));
       Serial.print(" ETHANOL ");
       Serial.print(mqSensor.getCalibratedEthanol(t,h));
